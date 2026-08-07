@@ -61,7 +61,8 @@ your own. Full walkthrough in **[docs/SETUP.md](docs/SETUP.md)**.
 ```sh
 flutter pub get
 dart run build_runner build
-flutter run --dart-define=TMDB_API_KEY=xxxxx --dart-define=TVDB_API_KEY=xxxxx
+flutter run --dart-define=TMDB_API_KEY=xxxxx --dart-define=TVDB_API_KEY=xxxxx \
+            --dart-define=GOOGLE_SERVER_CLIENT_ID=xxxxx.apps.googleusercontent.com
 ```
 
 The streaming market used for "where to watch" defaults to France; override it

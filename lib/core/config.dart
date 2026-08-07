@@ -6,10 +6,18 @@
 library;
 
 /// OAuth "Web" client ID of the Firebase project, required by Google Sign-In on
-/// Android. It is normally resolved from `android/app/google-services.json`;
-/// define it explicitly only if that lookup fails:
+/// Android:
 ///
 ///   flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=xxx.apps.googleusercontent.com
+///
+/// Left empty, the plugin falls back to the `default_web_client_id` string
+/// resource that the google-services Gradle plugin generates — but only when
+/// `google-services.json` carries a `client_type: 3` entry. That fallback is
+/// resolved reflectively at runtime, so when it is missing sign-in fails on the
+/// device rather than at build time. Passing the value explicitly keeps the
+/// failure visible and the configuration reviewable.
+///
+/// This is not a secret: it ships inside the APK either way.
 const googleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
 
 /// TMDB API key (v3). Powers the Discover catalog, global search, streaming

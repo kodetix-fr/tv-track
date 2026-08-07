@@ -40,10 +40,17 @@ the iOS `PRODUCT_BUNDLE_IDENTIFIER` accordingly.
 ```sh
 flutter pub get
 dart run build_runner build
-flutter run --dart-define=TMDB_API_KEY=xxxxx --dart-define=TVDB_API_KEY=xxxxx
+flutter run --dart-define=TMDB_API_KEY=xxxxx --dart-define=TVDB_API_KEY=xxxxx \
+            --dart-define=GOOGLE_SERVER_CLIENT_ID=xxxxx.apps.googleusercontent.com
 ```
 
-Both keys are free:
+`GOOGLE_SERVER_CLIENT_ID` is the OAuth **web** client ID that Firebase created
+when you enabled the Google provider — find it under *Google Cloud Console →
+Credentials*, or as the `client_type: 3` entry in `google-services.json`.
+Google Sign-In on Android needs it; without it the app builds fine and then
+fails at sign-in with `serverClientId must be provided on Android`.
+
+Both API keys are free:
 
 | Key | Where to get it | What breaks without it |
 |---|---|---|
@@ -89,6 +96,7 @@ with `base64 -i <file>`):
 | Variable | Contents | Secure |
 |---|---|---|
 | `FIREBASE_ANDROID_APP_ID` | Firebase Android app ID (`1:…:android:…`) | no |
+| `GOOGLE_SERVER_CLIENT_ID` | OAuth web client ID (`…apps.googleusercontent.com`) | no |
 | `ANDROID_KEY_ALIAS` | key alias inside the release keystore | no |
 | `GOOGLE_SERVICES_JSON` | base64 of `android/app/google-services.json` | yes |
 | `FIREBASE_OPTIONS_DART` | base64 of `lib/firebase_options.dart` | yes |
