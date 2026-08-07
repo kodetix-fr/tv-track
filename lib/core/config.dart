@@ -11,11 +11,14 @@ library;
 ///   flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=xxx.apps.googleusercontent.com
 ///
 /// Left empty, the plugin falls back to the `default_web_client_id` string
-/// resource that the google-services Gradle plugin generates — but only when
-/// `google-services.json` carries a `client_type: 3` entry. That fallback is
-/// resolved reflectively at runtime, so when it is missing sign-in fails on the
-/// device rather than at build time. Passing the value explicitly keeps the
-/// failure visible and the configuration reviewable.
+/// resource generated from `google-services.json` — which requires a
+/// `client_type: 3` entry in that file, and survives release builds only
+/// because `android/app/src/main/res/raw/keep.xml` holds it against the
+/// resource shrinker.
+///
+/// Both conditions fail silently at build time and surface as a sign-in error
+/// on the device, so passing the value explicitly keeps the configuration
+/// visible and reviewable.
 ///
 /// This is not a secret: it ships inside the APK either way.
 const googleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
