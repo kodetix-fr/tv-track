@@ -149,7 +149,7 @@ final class CatalogRowProvider
   }
 }
 
-String _$catalogRowHash() => r'1910241640569d630fe965725735a626bc252dcd';
+String _$catalogRowHash() => r'b8d86848b593d9d00fbf6032b3b319b7aaf68091';
 
 /// One Browse rail: first page only. A null [genreId] means this week's
 /// trending entries.
@@ -227,7 +227,7 @@ final class CategoryGridProvider
   }
 }
 
-String _$categoryGridHash() => r'27fae66e0798a8e7b176dc77ff1d895098e37d25';
+String _$categoryGridHash() => r'5f17adbb59dbc833928d4091ad326d6d54598236';
 
 /// Paginated, sortable category grid backing the infinite-scrolling screen.
 
