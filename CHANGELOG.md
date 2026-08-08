@@ -6,6 +6,14 @@ Notable changes to TV Track. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-08-08
+
+### Security
+
+- The TMDB and TheTVDB keys no longer ship inside the app. Metadata now travels
+  through a server-side proxy that holds the credentials and serves signed-in
+  callers only.
+
 ## [1.0.0] — 2026-08-08
 
 First public release. Development before this point is not covered here.
