@@ -132,5 +132,17 @@ Store the keystore and its password outside the repository and back them up:
 losing the keystore means you can no longer update an installed build. Once both
 files are loaded into CI variables, delete the local service account key.
 
-Every push to `main` then runs codegen → tests → signed APK → distribution to
-the `testers` group.
+### Cutting a release
+
+Builds are tag-driven, so `main` moves without spending build minutes:
+
+```sh
+# bump `version:` in pubspec.yaml and add the section to CHANGELOG.md first
+git tag -a v1.2.3 -m "TV Track 1.2.3"
+git push origin v1.2.3
+```
+
+The tag runs codegen → tests → signed APK → distribution to the `testers`
+group. Pull requests and pushes to `main` are covered by
+[GitHub Actions](../.github/workflows/ci.yml) instead, which analyzes, checks
+formatting and runs the tests without building an APK.

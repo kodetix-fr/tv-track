@@ -113,9 +113,9 @@ tool/                # one-shot CLI: import an export, bulk-enrich a library
 [GitHub Actions](.github/workflows/ci.yml) runs codegen, `flutter analyze` and
 `flutter test` on every pull request and on `main`.
 
-[CI](the release workflow) builds a signed APK on every push to `main` and
-ships it to Firebase App Distribution. Firebase config and the keystore are
-never committed; CI restores them from secure variables — see
+[CI](the release workflow) builds a signed APK for every `v*` tag and ships it
+to Firebase App Distribution. Firebase config and the keystore are never
+committed; CI restores them from secure variables — see
 [docs/SETUP.md](docs/SETUP.md).
 
 ## Contributing
