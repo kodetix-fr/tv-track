@@ -27,8 +27,8 @@ android {
     }
 
     signingConfigs {
-        // Keystore injected by CI (see the release workflow). Local builds fall back
-        // to the debug signing config.
+        // Keystore injected by CI. Local builds fall back to the debug signing
+        // config.
         create("release") {
             val keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
             if (keystorePath != null) {
