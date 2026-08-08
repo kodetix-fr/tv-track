@@ -21,6 +21,23 @@ jobs:
           channel: stable
           cache: true
 
+      # lib/firebase_options.dart is generated per project and never committed,
+      # so a clean checkout cannot be analyzed without standing in for it.
+      - name: Stub the Firebase configuration
+        run: |
+          cat > lib/firebase_options.dart <<'DART'
+          import 'package:firebase_core/firebase_core.dart';
+
+          class DefaultFirebaseOptions {
+            static FirebaseOptions get currentPlatform => const FirebaseOptions(
+              apiKey: 'ci',
+              appId: 'ci',
+              messagingSenderId: 'ci',
+              projectId: 'ci',
+            );
+          }
+          DART
+
       - name: Dependencies and code generation
         run: |
           flutter pub get

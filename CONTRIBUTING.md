@@ -27,6 +27,11 @@ flutter test                  # must pass
 
 The same four steps run in CI on every pull request.
 
+A fresh clone does not analyze until `lib/firebase_options.dart` exists —
+`lib/main.dart` imports it and it is generated per project, so run
+`flutterfire configure` as described in [docs/SETUP.md](docs/SETUP.md). CI
+stands in for it with a stub.
+
 A few things that are easy to miss:
 
 - **Generated files are committed.** `*.g.dart` and `*.freezed.dart` live in the
