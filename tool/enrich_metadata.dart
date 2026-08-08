@@ -70,10 +70,10 @@ Future<void> _enrichShows(
     stdout.writeln('TVDB_API_KEY not set: skipping shows.');
     return;
   }
-  final tvdb = TvdbApi(tvdbKey, language: french ? 'fra' : 'eng');
+  final tvdb = TvdbApi(apiKey: tvdbKey, language: french ? 'fra' : 'eng');
   final tmdbKey = Platform.environment['TMDB_API_KEY'];
   final tmdb = (tmdbKey != null && tmdbKey.isNotEmpty)
-      ? TmdbApi(tmdbKey, language: french ? 'fr-FR' : 'en-US')
+      ? TmdbApi(apiKey: tmdbKey, language: french ? 'fr-FR' : 'en-US')
       : null;
   if (tmdb == null) {
     stdout.writeln('TMDB_API_KEY not set: no streaming providers.');
@@ -121,7 +121,7 @@ Future<void> _enrichMovies(
     stdout.writeln('TMDB_API_KEY not set: skipping movies.');
     return;
   }
-  final tmdb = TmdbApi(apiKey, language: french ? 'fr-FR' : 'en-US');
+  final tmdb = TmdbApi(apiKey: apiKey, language: french ? 'fr-FR' : 'en-US');
   final docs = await db.listAll('users/$uid/movies');
   stdout.writeln('${docs.length} movies to enrich from TMDB…');
   var updated = 0, skipped = 0, errors = 0;

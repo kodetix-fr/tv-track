@@ -7,7 +7,9 @@ import 'package:dio/dio.dart';
 /// Show ids in this app are already TheTVDB ids (that is what the TV Time
 /// export contains), so no id resolution is needed.
 class TvdbApi {
-  TvdbApi(this._apiKey, {this.language = 'eng', Dio? dio})
+  /// Leaving [apiKey] empty expects [dio] to reach a proxy that authenticates
+  /// upstream on its behalf; the login round trip is then skipped.
+  TvdbApi({this.apiKey = '', this.language = 'eng', Dio? dio})
     : _dio =
           dio ??
           Dio(
@@ -18,7 +20,7 @@ class TvdbApi {
             ),
           );
 
-  final String _apiKey;
+  final String apiKey;
   final Dio _dio;
 
   /// ISO 639-2/T code used for translation endpoints.
@@ -31,15 +33,17 @@ class TvdbApi {
   /// `POST /login` returns a token valid for about a month; caching it for the
   /// session avoids one round trip per request.
   Future<void> _ensureAuth() async {
-    if (_token != null) return;
+    if (apiKey.isEmpty || _token != null) return;
     final r = await _dio.post<Map<String, dynamic>>(
       '/login',
-      data: {'apikey': _apiKey},
+      data: {'apikey': apiKey},
     );
     _token = (r.data?['data'] as Map<String, dynamic>?)?['token'] as String?;
   }
 
-  Options get _auth => Options(headers: {'Authorization': 'Bearer $_token'});
+  Options get _auth => _token == null
+      ? Options()
+      : Options(headers: {'Authorization': 'Bearer $_token'});
 
   static String? _img(String? p) {
     if (p == null || p.isEmpty) return null;

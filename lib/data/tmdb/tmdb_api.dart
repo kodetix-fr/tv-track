@@ -21,18 +21,24 @@ enum CatalogSort {
 /// catalog, global search, streaming providers, movie details and as a fallback
 /// for seasons TheTVDB has not published yet.
 class TmdbApi {
-  TmdbApi(this._apiKey, {this.language = 'en-US', this.region = 'US', Dio? dio})
-    : _dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              baseUrl: 'https://api.themoviedb.org/3',
-              connectTimeout: const Duration(seconds: 10),
-              receiveTimeout: const Duration(seconds: 10),
-            ),
-          );
+  /// Leaving [apiKey] empty expects [dio] to reach a proxy that appends the key
+  /// upstream on its behalf.
+  TmdbApi({
+    this.apiKey = '',
+    this.language = 'en-US',
+    this.region = 'US',
+    Dio? dio,
+  }) : _dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               baseUrl: 'https://api.themoviedb.org/3',
+               connectTimeout: const Duration(seconds: 10),
+               receiveTimeout: const Duration(seconds: 10),
+             ),
+           );
 
-  final String _apiKey;
+  final String apiKey;
   final Dio _dio;
 
   /// TMDB `language` parameter, e.g. `fr-FR`.
@@ -44,7 +50,7 @@ class TmdbApi {
   static const imageBase = 'https://image.tmdb.org/t/p';
 
   Map<String, dynamic> _params([Map<String, dynamic> extra = const {}]) => {
-    'api_key': _apiKey,
+    if (apiKey.isNotEmpty) 'api_key': apiKey,
     'language': language,
     ...extra,
   };
@@ -92,7 +98,10 @@ class TmdbApi {
   Future<int?> tvIdByTvdb(int tvdbId) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/find/$tvdbId',
-      queryParameters: {'external_source': 'tvdb_id', 'api_key': _apiKey},
+      queryParameters: {
+        'external_source': 'tvdb_id',
+        if (apiKey.isNotEmpty) 'api_key': apiKey,
+      },
     );
     final results = response.data?['tv_results'] as List?;
     if (results == null || results.isEmpty) return null;
@@ -104,7 +113,7 @@ class TmdbApi {
   Future<List<String>> tvProviders(int tmdbTvId) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/tv/$tmdbTvId/watch/providers',
-      queryParameters: {'api_key': _apiKey},
+      queryParameters: {if (apiKey.isNotEmpty) 'api_key': apiKey},
     );
     final country =
         (response.data?['results'] as Map<String, dynamic>?)?[region]
@@ -262,7 +271,7 @@ class TmdbApi {
   Future<String?> movieImdbId(int tmdbMovieId) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/movie/$tmdbMovieId/external_ids',
-      queryParameters: {'api_key': _apiKey},
+      queryParameters: {if (apiKey.isNotEmpty) 'api_key': apiKey},
     );
     final id = response.data?['imdb_id'] as String?;
     return (id == null || id.isEmpty) ? null : id;
@@ -295,7 +304,7 @@ class TmdbApi {
   Future<int?> tvdbIdByTmdb(int tmdbTvId) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/tv/$tmdbTvId/external_ids',
-      queryParameters: {'api_key': _apiKey},
+      queryParameters: {if (apiKey.isNotEmpty) 'api_key': apiKey},
     );
     return response.data?['tvdb_id'] as int?;
   }

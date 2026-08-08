@@ -1,7 +1,6 @@
 // Visual preview harness: renders the screens against sample data, with no
 // Firebase project and no sign-in, so the UI can be checked on an emulator.
 //
-//   flutter run -t lib/preview_main.dart --dart-define=TMDB_API_KEY=xxx
 //   flutter run -t lib/preview_main.dart --dart-define=PREVIEW=detail
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

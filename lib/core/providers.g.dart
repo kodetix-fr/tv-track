@@ -262,19 +262,19 @@ final class MoviesProvider
 
 String _$moviesHash() => r'e6ead94bc7fb43e0f148b5d2a13b41237512ba5e';
 
-/// Null when no key is configured, which disables show enrichment.
+/// Null when no proxy is configured, which disables show enrichment.
 /// keepAlive so the auth token survives for the whole session.
 
 @ProviderFor(tvdbApi)
 final tvdbApiProvider = TvdbApiProvider._();
 
-/// Null when no key is configured, which disables show enrichment.
+/// Null when no proxy is configured, which disables show enrichment.
 /// keepAlive so the auth token survives for the whole session.
 
 final class TvdbApiProvider
     extends $FunctionalProvider<TvdbApi?, TvdbApi?, TvdbApi?>
     with $Provider<TvdbApi?> {
-  /// Null when no key is configured, which disables show enrichment.
+  /// Null when no proxy is configured, which disables show enrichment.
   /// keepAlive so the auth token survives for the whole session.
   TvdbApiProvider._()
     : super(
@@ -309,19 +309,19 @@ final class TvdbApiProvider
   }
 }
 
-String _$tvdbApiHash() => r'51b9ac3da3ae7ee4da0d82aaeed7d1ed60ea3110';
+String _$tvdbApiHash() => r'03bdfc09d27eb0f98c172b33f8635483f98b3326';
 
-/// Null when no key is configured, which disables Discover and search.
+/// Null when no proxy is configured, which disables Discover and search.
 
 @ProviderFor(tmdbApi)
 final tmdbApiProvider = TmdbApiProvider._();
 
-/// Null when no key is configured, which disables Discover and search.
+/// Null when no proxy is configured, which disables Discover and search.
 
 final class TmdbApiProvider
     extends $FunctionalProvider<TmdbApi?, TmdbApi?, TmdbApi?>
     with $Provider<TmdbApi?> {
-  /// Null when no key is configured, which disables Discover and search.
+  /// Null when no proxy is configured, which disables Discover and search.
   TmdbApiProvider._()
     : super(
         from: null,
@@ -355,7 +355,7 @@ final class TmdbApiProvider
   }
 }
 
-String _$tmdbApiHash() => r'694cdcaabe7b6478092801024a856553bcdb7161';
+String _$tmdbApiHash() => r'5724aac8dcdb1573459e337bece53e7ad805d4c4';
 
 @ProviderFor(discoverSeenKeys)
 final discoverSeenKeysProvider = DiscoverSeenKeysProvider._();

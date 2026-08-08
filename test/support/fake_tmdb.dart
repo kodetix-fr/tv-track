@@ -43,7 +43,7 @@ TmdbApi fakeTmdbApi(
   String language = 'en-US',
   String region = 'US',
 }) => TmdbApi(
-  'test-key',
+  apiKey: 'test-key',
   language: language,
   region: region,
   dio: Dio()..httpClientAdapter = adapter,

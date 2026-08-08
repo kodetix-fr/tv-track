@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tv_track/data/tmdb/catalog_item.dart';
 import 'package:tv_track/data/tmdb/tmdb_api.dart';
@@ -5,6 +6,32 @@ import 'package:tv_track/data/tmdb/tmdb_api.dart';
 import 'support/fake_tmdb.dart';
 
 void main() {
+  group('TmdbApi authentication', () {
+    test('sends the key when it holds one', () async {
+      final adapter = FakeTmdbAdapter((_) => null);
+
+      await fakeTmdbApi(adapter).search(MediaKind.tv, 'berlin');
+
+      expect(adapter.requests.single.queryParameters['api_key'], 'test-key');
+    });
+
+    test('sends no key at all when proxied', () async {
+      final adapter = FakeTmdbAdapter(
+        (r) => r.path.contains('watch/providers')
+            ? {'results': <String, dynamic>{}}
+            : null,
+      );
+      final api = TmdbApi(dio: Dio()..httpClientAdapter = adapter);
+
+      await api.search(MediaKind.tv, 'berlin');
+      await api.tvProviders(42);
+
+      for (final request in adapter.requests) {
+        expect(request.queryParameters, isNot(contains('api_key')));
+      }
+    });
+  });
+
   group('TmdbApi.search', () {
     test('a blank query never reaches the network', () async {
       final adapter = FakeTmdbAdapter((_) => null);

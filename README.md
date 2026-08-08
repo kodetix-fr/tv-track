@@ -26,14 +26,16 @@ show and episode text follows on the next refresh.
 
 ## Data sources
 
-| Source | Used for | Key |
-|---|---|---|
-| [TheTVDB v4](https://thetvdb.github.io/v4-api/) | Primary show metadata: seasons, episode titles and overviews, artwork, air dates, status, network | `TVDB_API_KEY` |
-| [TMDB](https://developer.themoviedb.org/docs) | Discover catalog, search, streaming providers, movie details, and a fallback for seasons TheTVDB has not indexed yet | `TMDB_API_KEY` |
-| [Firebase](https://firebase.google.com) | Google sign-in and Firestore storage, one document per title under `users/{uid}` | project config |
+| Source | Used for |
+|---|---|
+| [TheTVDB v4](https://thetvdb.github.io/v4-api/) | Primary show metadata: seasons, episode titles and overviews, artwork, air dates, status, network |
+| [TMDB](https://developer.themoviedb.org/docs) | Discover catalog, search, streaming providers, movie details, and a fallback for seasons TheTVDB has not indexed yet |
+| [Firebase](https://firebase.google.com) | Google sign-in and Firestore storage, one document per title under `users/{uid}` |
 
-Both API keys are free. Each feature disables itself cleanly when its key is
-absent, so the app still runs on whatever is already stored.
+Both provider keys are free, and the app never sees them: they sit in the proxy
+under [`functions/`](functions/), which the app reaches with `METADATA_PROXY_URL`.
+Without that URL, Discover, search and enrichment disable themselves cleanly and
+the app still runs on whatever is already stored.
 
 Tracking data lives at `users/{uid}/shows/{tvdbId}` and
 `users/{uid}/movies/{tvdbId}`, and every user can only read their own
@@ -64,7 +66,7 @@ your own. Full walkthrough in **[docs/SETUP.md](docs/SETUP.md)**.
 ```sh
 flutter pub get
 dart run build_runner build
-flutter run --dart-define=TMDB_API_KEY=xxxxx --dart-define=TVDB_API_KEY=xxxxx \
+flutter run --dart-define=METADATA_PROXY_URL=https://europe-west1-xxx.cloudfunctions.net/metadata \
             --dart-define=GOOGLE_SERVER_CLIENT_ID=xxxxx.apps.googleusercontent.com
 ```
 
@@ -80,7 +82,7 @@ To see the UI without setting up Firebase at all, the preview entrypoint
 renders the screens against sample data:
 
 ```sh
-flutter run -t lib/preview_main.dart --dart-define=TMDB_API_KEY=xxxxx
+flutter run -t lib/preview_main.dart
 # variants: --dart-define=PREVIEW=detail|movie|search
 ```
 
@@ -113,10 +115,14 @@ tool/                # one-shot CLI: import an export, bulk-enrich a library
 [GitHub Actions](.github/workflows/ci.yml) runs codegen, `flutter analyze` and
 `flutter test` on every pull request and on `main`.
 
-[CI](the release workflow) builds a signed APK for every `v*` tag and ships it
-to Firebase App Distribution. Firebase config and the keystore are never
-committed; CI restores them from secure variables — see
+[A second workflow](.github/workflows/release.yml) builds a signed APK for every
+`v*` tag and ships it to Firebase App Distribution. Firebase config and the
+keystore are never committed; CI restores them from repository secrets — see
 [docs/SETUP.md](docs/SETUP.md).
+
+The app reaches TMDB and TheTVDB through the proxy in [`functions/`](functions/),
+which holds the provider keys server-side and serves signed-in callers only, so
+no API key ships inside the APK.
 
 ## Contributing
 

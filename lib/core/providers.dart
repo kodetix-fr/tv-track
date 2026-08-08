@@ -10,6 +10,7 @@ import '../data/tmdb/tmdb_api.dart';
 import '../data/tvdb/tvdb_api.dart';
 import 'config.dart';
 import 'locale.dart';
+import 'metadata_proxy.dart';
 
 part 'providers.g.dart';
 
@@ -47,21 +48,24 @@ Stream<List<Movie>> movies(Ref ref) {
   return repo.watchMovies();
 }
 
-/// Null when no key is configured, which disables show enrichment.
+/// Null when no proxy is configured, which disables show enrichment.
 /// keepAlive so the auth token survives for the whole session.
 @Riverpod(keepAlive: true)
-TvdbApi? tvdbApi(Ref ref) => tvdbApiKey.isEmpty
+TvdbApi? tvdbApi(Ref ref) => !metadataAvailable
     ? null
-    : TvdbApi(tvdbApiKey, language: ref.watch(localeControllerProvider).tvdb);
+    : TvdbApi(
+        language: ref.watch(localeControllerProvider).tvdb,
+        dio: metadataProxyDio('tvdb', auth: ref.watch(firebaseAuthProvider)),
+      );
 
-/// Null when no key is configured, which disables Discover and search.
+/// Null when no proxy is configured, which disables Discover and search.
 @Riverpod(keepAlive: true)
-TmdbApi? tmdbApi(Ref ref) => tmdbApiKey.isEmpty
+TmdbApi? tmdbApi(Ref ref) => !metadataAvailable
     ? null
     : TmdbApi(
-        tmdbApiKey,
         language: ref.watch(localeControllerProvider).tmdb,
         region: watchRegion,
+        dio: metadataProxyDio('tmdb', auth: ref.watch(firebaseAuthProvider)),
       );
 
 @riverpod

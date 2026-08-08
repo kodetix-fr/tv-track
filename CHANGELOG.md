@@ -28,7 +28,7 @@ First public release. Development before this point is not covered here.
 - Google sign-in with per-user Firestore storage
 - TV Time export import, in-app and through `tool/seed_tvtime.dart`
 - CI pipeline building a signed APK and shipping it to Firebase App
-  Distribution on every push to `main`
+  Distribution
 
 ### Fixed
 

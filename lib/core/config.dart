@@ -1,8 +1,9 @@
 /// Build-time configuration.
 ///
 /// Every value below is supplied with `--dart-define` so that nothing tied to a
-/// specific Firebase project or API account lives in the repository. Each
-/// feature degrades gracefully when its key is missing.
+/// specific Firebase project lives in the repository. Each feature degrades
+/// gracefully when its value is missing. Provider API keys are deliberately
+/// absent: they stay server-side, behind the proxy in `functions/`.
 library;
 
 /// OAuth "Web" client ID of the Firebase project, required by Google Sign-In on
@@ -23,25 +24,22 @@ library;
 /// This is not a secret: it ships inside the APK either way.
 const googleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
 
-/// TMDB API key (v3). Powers the Discover catalog, global search, streaming
-/// providers and poster artwork:
+/// Base URL of the metadata proxy deployed from `functions/`, which holds the
+/// TMDB and TheTVDB keys so the APK never carries them:
 ///
-///   flutter run --dart-define=TMDB_API_KEY=xxxxx
+///   flutter run --dart-define=METADATA_PROXY_URL=https://europe-west1-xxx.cloudfunctions.net/metadata
 ///
-/// Read-only and low sensitivity. Discover and search disable themselves when
-/// the key is absent.
-const tmdbApiKey = String.fromEnvironment('TMDB_API_KEY');
+/// It answers signed-in callers only, and exposes one path per provider
+/// (`/tmdb/…`, `/tvdb/…`) mirroring the upstream routes. Left empty, Discover,
+/// search and show enrichment disable themselves.
+const metadataProxyUrl = String.fromEnvironment('METADATA_PROXY_URL');
 
 /// Streaming market used to resolve "where to watch" providers and regional
 /// release dates, as an ISO 3166-1 country code. Separate from the interface
 /// language: where you live is not what language you read in.
 const watchRegion = String.fromEnvironment('WATCH_REGION', defaultValue: 'FR');
 
-/// TheTVDB API key (v4), the primary metadata source for shows: season layout,
-/// episode titles and overviews, artwork, air dates, status and network.
-///
-///   flutter run --dart-define=TVDB_API_KEY=xxxxx
-///
-/// Without it, show enrichment is skipped and the app keeps serving whatever is
-/// already stored in Firestore.
-const tvdbApiKey = String.fromEnvironment('TVDB_API_KEY');
+/// Whether the metadata providers are reachable at all. Without the proxy, show
+/// enrichment is skipped and the app keeps serving whatever is already stored in
+/// Firestore.
+bool get metadataAvailable => metadataProxyUrl.isNotEmpty;
