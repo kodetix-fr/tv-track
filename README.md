@@ -1,5 +1,8 @@
 # TV Track
 
+[![CI](https://github.com/kodetix-fr/tv-track/actions/workflows/ci.yml/badge.svg)](https://github.com/kodetix-fr/tv-track/actions/workflows/ci.yml)
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+
 A Flutter app for tracking the TV shows and movies you watch — built as a
 replacement for TV Time after it shut down, and for importing the export it
 left behind.
@@ -107,10 +110,20 @@ tool/                # one-shot CLI: import an export, bulk-enrich a library
 
 ## Continuous integration
 
+[GitHub Actions](.github/workflows/ci.yml) runs codegen, `flutter analyze` and
+`flutter test` on every pull request and on `main`.
+
 [CI](the release workflow) builds a signed APK on every push to `main` and
 ships it to Firebase App Distribution. Firebase config and the keystore are
 never committed; CI restores them from secure variables — see
 [docs/SETUP.md](docs/SETUP.md).
+
+## Contributing
+
+Bug reports, translations and pull requests are welcome —
+[CONTRIBUTING.md](CONTRIBUTING.md) covers the local checks and the conventions.
+Vulnerabilities go through [SECURITY.md](SECURITY.md) rather than a public
+issue. Released changes are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence
 
