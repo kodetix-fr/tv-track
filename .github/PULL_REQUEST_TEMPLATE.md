@@ -8,6 +8,7 @@
 
 ## Checklist
 
+- [ ] `dart format lib test tool` leaves nothing to change
 - [ ] `flutter analyze` reports no issues
 - [ ] `flutter test` passes
 - [ ] `dart run build_runner build` was run and generated files are committed, if models, providers or routes changed
