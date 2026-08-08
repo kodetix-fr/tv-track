@@ -43,7 +43,7 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icon/app_icon.png"
   min_sdk_android: 23
-  # Icône adaptative Android : fond charbon de la marque + symbole en avant-plan.
+  # Android adaptive icon: brand charcoal background, symbol in the foreground.
   adaptive_icon_background: "#12100D"
   adaptive_icon_foreground: "assets/icon/app_icon.png"
   remove_alpha_ios: true
