@@ -20,11 +20,12 @@ flutter run -t lib/preview_main.dart --dart-define=TMDB_API_KEY=xxxxx
 
 ```sh
 dart run build_runner build   # regenerate if you touched a model, provider or route
+dart format lib test tool     # must leave nothing to change
 flutter analyze               # must report no issues
 flutter test                  # must pass
 ```
 
-The same three steps run in CI on every pull request.
+The same four steps run in CI on every pull request.
 
 A few things that are easy to miss:
 
