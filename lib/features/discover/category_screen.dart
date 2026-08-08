@@ -33,11 +33,8 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
   void initState() {
     super.initState();
     _scroll.addListener(() {
-      if (_scroll.position.pixels >
-          _scroll.position.maxScrollExtent - 600) {
-        ref
-            .read(_gridProvider.notifier)
-            .loadMore();
+      if (_scroll.position.pixels > _scroll.position.maxScrollExtent - 600) {
+        ref.read(_gridProvider.notifier).loadMore();
       }
     });
   }
@@ -49,10 +46,10 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
   }
 
   CategoryGridProvider get _gridProvider => categoryGridProvider(
-        kind: widget.kind,
-        sort: _sort,
-        genreId: widget.genreId,
-      );
+    kind: widget.kind,
+    sort: _sort,
+    genreId: widget.genreId,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -79,16 +76,17 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
           ),
           Expanded(
             child: grid.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
-                  child: Text(AppLocalizations.of(context).loadFailed,
-                      style: TextStyle(color: dust))),
+                child: Text(
+                  AppLocalizations.of(context).loadFailed,
+                  style: TextStyle(color: dust),
+                ),
+              ),
               data: (items) => GridView.builder(
                 controller: _scroll,
                 padding: const EdgeInsets.fromLTRB(12, 4, 12, 20),
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 0.52, // 2:3 poster plus the title line
                   crossAxisSpacing: 12,
@@ -115,8 +113,11 @@ String _sortLabel(BuildContext context, CatalogSort sort) {
 }
 
 class _SortChip extends StatelessWidget {
-  const _SortChip(
-      {required this.label, required this.selected, required this.onTap});
+  const _SortChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -131,14 +132,16 @@ class _SortChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? tungsten : charcoal,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-              color: selected ? tungsten : outlineDim, width: 1),
+          border: Border.all(color: selected ? tungsten : outlineDim, width: 1),
         ),
-        child: Text(label,
-            style: condensed(
-                size: 13,
-                color: selected ? const Color(0xFF221603) : dust,
-                weight: FontWeight.w600)),
+        child: Text(
+          label,
+          style: condensed(
+            size: 13,
+            color: selected ? const Color(0xFF221603) : dust,
+            weight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

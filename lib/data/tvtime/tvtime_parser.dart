@@ -25,11 +25,13 @@ class TvTimeParser {
                 number: season['number'] as int,
                 isSpecials: season['is_specials'] as bool? ?? false,
                 episodes: [
-                  for (final episode in (season['episodes'] as List? ?? [])
-                      .cast<Map<String, dynamic>>())
+                  for (final episode
+                      in (season['episodes'] as List? ?? [])
+                          .cast<Map<String, dynamic>>())
                     Episode(
                       tvdbId:
-                          (episode['id'] as Map<String, dynamic>)['tvdb'] as int,
+                          (episode['id'] as Map<String, dynamic>)['tvdb']
+                              as int,
                       number: episode['number'] as int,
                       name: episode['name'] as String? ?? '',
                       special: episode['special'] as bool? ?? false,
@@ -64,7 +66,8 @@ class TvTimeParser {
   /// whose entries carry a `seasons` key is a show export, anything else is a
   /// movie export.
   static ({List<Show> shows, List<Movie> movies}) parseFiles(
-      Iterable<String> jsonStrings) {
+    Iterable<String> jsonStrings,
+  ) {
     final shows = <Show>[];
     final movies = <Movie>[];
     for (final jsonString in jsonStrings) {

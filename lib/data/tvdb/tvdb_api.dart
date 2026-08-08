@@ -8,12 +8,15 @@ import 'package:dio/dio.dart';
 /// export contains), so no id resolution is needed.
 class TvdbApi {
   TvdbApi(this._apiKey, {this.language = 'eng', Dio? dio})
-      : _dio = dio ??
-            Dio(BaseOptions(
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
               baseUrl: 'https://api4.thetvdb.com/v4',
               connectTimeout: const Duration(seconds: 10),
               receiveTimeout: const Duration(seconds: 15),
-            ));
+            ),
+          );
 
   final String _apiKey;
   final Dio _dio;
@@ -105,18 +108,20 @@ class TvdbApi {
         final season = int.tryParse('${e['seasonNumber']}') ?? 0;
         final number = int.tryParse('${e['number']}') ?? 0;
         final aired = e['aired'] as String?;
-        out.add(TvdbEpisode(
-          season: season,
-          number: number,
-          name: (e['name'] as String?) ?? '',
-          overview: _nonEmpty(e['overview'] as String?),
-          still: _img(e['image'] as String?),
-          // Anchored at noon UTC so the date does not shift a day either way
-          // when rendered in the device timezone.
-          airDate: (aired == null || aired.isEmpty)
-              ? null
-              : DateTime.tryParse('${aired}T12:00:00Z'),
-        ));
+        out.add(
+          TvdbEpisode(
+            season: season,
+            number: number,
+            name: (e['name'] as String?) ?? '',
+            overview: _nonEmpty(e['overview'] as String?),
+            still: _img(e['image'] as String?),
+            // Anchored at noon UTC so the date does not shift a day either way
+            // when rendered in the device timezone.
+            airDate: (aired == null || aired.isEmpty)
+                ? null
+                : DateTime.tryParse('${aired}T12:00:00Z'),
+          ),
+        );
       }
       if ((r.data?['links'] as Map<String, dynamic>?)?['next'] == null) break;
       page++;

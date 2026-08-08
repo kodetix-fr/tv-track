@@ -66,8 +66,12 @@ class CategoryGrid extends _$CategoryGrid {
     final out = <CatalogItem>[];
     for (var i = 0; i < _maxPagesPerLoad && !_end; i++) {
       _page++;
-      final items = await tmdb.discover(kind,
-          sort: sort, genreId: genreId, page: _page);
+      final items = await tmdb.discover(
+        kind,
+        sort: sort,
+        genreId: genreId,
+        page: _page,
+      );
       if (items.isEmpty) {
         _end = true;
         break;

@@ -50,8 +50,9 @@ class _ShowDetailScreenState extends ConsumerState<ShowDetailScreen> {
         if (mounted) ref.read(liveRepairProvider.notifier).repairShow(show);
       });
     }
-    final repairing =
-        ref.watch(liveRepairProvider).contains('show-${widget.tvdbId}');
+    final repairing = ref
+        .watch(liveRepairProvider)
+        .contains('show-${widget.tvdbId}');
 
     final next = show.nextEpisode;
     final nextSeasonNumber = next?.season.number;
@@ -84,23 +85,24 @@ class _ShowDetailScreenState extends ConsumerState<ShowDetailScreen> {
             // it would destroy watch history.
             onDelete: show.isStarted ? null : () => _confirmDelete(show),
           ),
-          if (repairing)
-            const SliverToBoxAdapter(child: _RepairBanner()),
+          if (repairing) const SliverToBoxAdapter(child: _RepairBanner()),
           if (show.providers.isNotEmpty || (show.overview?.isNotEmpty ?? false))
             SliverToBoxAdapter(child: _Overview(show: show)),
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 24),
-            sliver: SliverList.list(children: [
-              for (final season in show.regularSeasons)
-                _SeasonTile(
-                  key: PageStorageKey('season-${season.number}'),
-                  show: show,
-                  season: season,
-                  initiallyExpanded: season.number == nextSeasonNumber,
-                  highlightEpisodeTvdb: nextEpisodeTvdb,
-                  highlightKey: _nextEpisodeKey,
-                ),
-            ]),
+            sliver: SliverList.list(
+              children: [
+                for (final season in show.regularSeasons)
+                  _SeasonTile(
+                    key: PageStorageKey('season-${season.number}'),
+                    show: show,
+                    season: season,
+                    initiallyExpanded: season.number == nextSeasonNumber,
+                    highlightEpisodeTvdb: nextEpisodeTvdb,
+                    highlightKey: _nextEpisodeKey,
+                  ),
+              ],
+            ),
           ),
         ],
       ),
@@ -119,10 +121,9 @@ class _ShowDetailScreenState extends ConsumerState<ShowDetailScreen> {
         title: Text(l10n.deleteShowTitle, style: condensed(size: 18)),
         content: Text(
           l10n.deleteShowBody(show.title),
-          style: Theme.of(ctx)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: dust, height: 1.4),
+          style: Theme.of(
+            ctx,
+          ).textTheme.bodyMedium?.copyWith(color: dust, height: 1.4),
         ),
         actions: [
           TextButton(
@@ -131,8 +132,10 @@ class _ShowDetailScreenState extends ConsumerState<ShowDetailScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child:
-                Text(l10n.delete, style: condensed(size: 15, color: tungsten)),
+            child: Text(
+              l10n.delete,
+              style: condensed(size: 15, color: tungsten),
+            ),
           ),
         ],
       ),
@@ -145,8 +148,9 @@ class _ShowDetailScreenState extends ConsumerState<ShowDetailScreen> {
     final messenger = ScaffoldMessenger.of(context);
     context.pop();
     await repo.deleteShow(show.tvdbId);
-    messenger
-        .showSnackBar(SnackBar(content: Text(l10n.showRemoved(show.title))));
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.showRemoved(show.title))),
+    );
   }
 }
 
@@ -171,9 +175,12 @@ class _Header extends StatelessWidget {
       else if (show.isEnded)
         l10n.statusEnded.toUpperCase(),
       if (show.nextAirDate != null)
-        l10n.nextEpisodeOn(DateFormat('d MMM', locale)
-            .format(show.nextAirDate!.toLocal())
-            .toUpperCase()),
+        l10n.nextEpisodeOn(
+          DateFormat(
+            'd MMM',
+            locale,
+          ).format(show.nextAirDate!.toLocal()).toUpperCase(),
+        ),
     ];
 
     return SliverAppBar(
@@ -191,7 +198,10 @@ class _Header extends StatelessWidget {
         // Wider end inset when the delete action shows, so the collapsed
         // title does not slide under the icon.
         titlePadding: EdgeInsetsDirectional.only(
-            start: 56, bottom: 14, end: onDelete != null ? 56 : 16),
+          start: 56,
+          bottom: 14,
+          end: onDelete != null ? 56 : 16,
+        ),
         title: Text(
           show.title,
           maxLines: 1,
@@ -265,8 +275,10 @@ class _RepairBanner extends StatelessWidget {
             child: CircularProgressIndicator(strokeWidth: 1.6, color: dust),
           ),
           const SizedBox(width: 10),
-          Text(AppLocalizations.of(context).updatingInfo,
-              style: mono(size: 11, color: dust)),
+          Text(
+            AppLocalizations.of(context).updatingInfo,
+            style: mono(size: 11, color: dust),
+          ),
         ],
       ),
     );
@@ -291,9 +303,7 @@ class _Overview extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: [
-                for (final p in show.providers) _ProviderChip(p),
-              ],
+              children: [for (final p in show.providers) _ProviderChip(p)],
             ),
             const SizedBox(height: 18),
           ],
@@ -353,18 +363,20 @@ class _SeasonTile extends ConsumerWidget {
       initiallyExpanded: initiallyExpanded,
       title: Row(
         children: [
-          Text('S${season.number.toString().padLeft(2, '0')}',
-              style: mono(size: 13, color: linen, weight: FontWeight.w600)),
+          Text(
+            'S${season.number.toString().padLeft(2, '0')}',
+            style: mono(size: 13, color: linen, weight: FontWeight.w600),
+          ),
           const SizedBox(width: 10),
-          Text(l10n.seasonNumber(season.number),
-              style: condensed(size: 15)),
+          Text(l10n.seasonNumber(season.number), style: condensed(size: 15)),
         ],
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 2),
         child: Text(
-            l10n.seasonWatchedCount(season.watchedCount, season.episodes.length),
-            style: mono(size: 10.5)),
+          l10n.seasonWatchedCount(season.watchedCount, season.episodes.length),
+          style: mono(size: 10.5),
+        ),
       ),
       trailing: IconButton(
         icon: Icon(season.isCompleted ? Icons.remove_done : Icons.done_all),
@@ -375,12 +387,14 @@ class _SeasonTile extends ConsumerWidget {
         onPressed: () {
           HapticFeedback.lightImpact();
           repo?.saveShow(
-              show.withSeasonWatched(season.number, !season.isCompleted));
+            show.withSeasonWatched(season.number, !season.isCompleted),
+          );
         },
       ),
       children: [
-        for (final episode
-            in season.episodes.sorted((a, b) => a.number - b.number))
+        for (final episode in season.episodes.sorted(
+          (a, b) => a.number - b.number,
+        ))
           _EpisodeTile(
             key: episode.tvdbId == highlightEpisodeTvdb ? highlightKey : null,
             show: show,
@@ -395,11 +409,12 @@ class _SeasonTile extends ConsumerWidget {
 /// Episode row. Ticking one while earlier episodes are still unwatched offers
 /// to mark everything before it, across seasons.
 class _EpisodeTile extends ConsumerStatefulWidget {
-  const _EpisodeTile(
-      {super.key,
-      required this.show,
-      required this.season,
-      required this.episode});
+  const _EpisodeTile({
+    super.key,
+    required this.show,
+    required this.season,
+    required this.episode,
+  });
 
   final Show show;
   final Season season;
@@ -420,24 +435,33 @@ class _EpisodeTileState extends ConsumerState<_EpisodeTile> {
     repo.saveShow(widget.show.withEpisodeWatched(ep.tvdbId, !ep.watched));
 
     if (!ep.watched) {
-      final before =
-          widget.show.unwatchedBefore(widget.season.number, ep.number);
+      final before = widget.show.unwatchedBefore(
+        widget.season.number,
+        ep.number,
+      );
       if (before > 0) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            content:
-                Text(AppLocalizations.of(context).unwatchedBefore(before)),
-            duration: const Duration(seconds: 5),
-            action: SnackBarAction(
-              label: AppLocalizations.of(context).markAllPrevious,
-              onPressed: () {
-                HapticFeedback.mediumImpact();
-                repo.saveShow(widget.show
-                    .markWatchedUpTo(widget.season.number, ep.number));
-              },
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).unwatchedBefore(before),
+              ),
+              duration: const Duration(seconds: 5),
+              action: SnackBarAction(
+                label: AppLocalizations.of(context).markAllPrevious,
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  repo.saveShow(
+                    widget.show.markWatchedUpTo(
+                      widget.season.number,
+                      ep.number,
+                    ),
+                  );
+                },
+              ),
             ),
-          ));
+          );
       }
     }
   }
@@ -452,8 +476,7 @@ class _EpisodeTileState extends ConsumerState<_EpisodeTile> {
     final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
     final secondary = unaired
-        ? l10n.airsOn(
-            DateFormat('d MMMM', locale).format(airDate.toLocal()))
+        ? l10n.airsOn(DateFormat('d MMMM', locale).format(airDate.toLocal()))
         : ep.overview;
 
     return InkWell(
@@ -478,17 +501,22 @@ class _EpisodeTileState extends ConsumerState<_EpisodeTile> {
                       children: [
                         Row(
                           children: [
-                            Text('E${ep.number.toString().padLeft(2, '0')}',
-                                style: mono(
-                                    size: 11,
-                                    color: unaired ? dust : tungsten)),
+                            Text(
+                              'E${ep.number.toString().padLeft(2, '0')}',
+                              style: mono(
+                                size: 11,
+                                color: unaired ? dust : tungsten,
+                              ),
+                            ),
                             // Aired episodes show their date here; upcoming
                             // ones show it on the secondary line instead.
                             if (airDate != null && !unaired) ...[
                               const SizedBox(width: 8),
                               Text(
-                                DateFormat('d MMM y', locale)
-                                    .format(airDate.toLocal()),
+                                DateFormat(
+                                  'd MMM y',
+                                  locale,
+                                ).format(airDate.toLocal()),
                                 style: mono(size: 11, color: dust),
                               ),
                             ],
@@ -502,7 +530,9 @@ class _EpisodeTileState extends ConsumerState<_EpisodeTile> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: condensed(
-                              size: 15, color: unaired ? dust : linen),
+                            size: 15,
+                            color: unaired ? dust : linen,
+                          ),
                         ),
                         if (secondary != null && secondary.isNotEmpty) ...[
                           const SizedBox(height: 4),
@@ -514,18 +544,15 @@ class _EpisodeTileState extends ConsumerState<_EpisodeTile> {
                                 : TextOverflow.ellipsis,
                             style: unaired
                                 ? mono(size: 10.5, color: tungsten)
-                                : Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(color: dust, height: 1.35),
+                                : Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: dust, height: 1.35),
                           ),
                         ],
                       ],
                     ),
                   ),
                 ),
-                _Check(
-                    watched: ep.watched, enabled: !unaired, onTap: _toggle),
+                _Check(watched: ep.watched, enabled: !unaired, onTap: _toggle),
               ],
             ),
           ],
@@ -557,27 +584,31 @@ class _Still extends StatelessWidget {
       child: SizedBox(
         width: w,
         height: h,
-        child: dimmed
-            ? Opacity(opacity: 0.5, child: child)
-            : child,
+        child: dimmed ? Opacity(opacity: 0.5, child: child) : child,
       ),
     );
   }
 
   Widget _fallback() => DecoratedBox(
-        decoration: const BoxDecoration(color: charcoalHigh),
-        child: Center(
-          child: Icon(Icons.movie_outlined,
-              color: dust.withValues(alpha: .5), size: 22),
-        ),
-      );
+    decoration: const BoxDecoration(color: charcoalHigh),
+    child: Center(
+      child: Icon(
+        Icons.movie_outlined,
+        color: dust.withValues(alpha: .5),
+        size: 22,
+      ),
+    ),
+  );
 }
 
 /// A 24px checkbox centred in a 44px touch target, disabled for episodes that
 /// have not aired yet.
 class _Check extends StatelessWidget {
-  const _Check(
-      {required this.watched, required this.enabled, required this.onTap});
+  const _Check({
+    required this.watched,
+    required this.enabled,
+    required this.onTap,
+  });
 
   final bool watched;
   final bool enabled;
@@ -600,8 +631,9 @@ class _Check extends StatelessWidget {
             decoration: BoxDecoration(
               color: watched ? tungsten : Colors.transparent,
               border: Border.all(
-                  color: enabled ? (watched ? tungsten : dust) : outlineDim,
-                  width: 1.6),
+                color: enabled ? (watched ? tungsten : dust) : outlineDim,
+                width: 1.6,
+              ),
               borderRadius: BorderRadius.circular(7),
             ),
             child: watched

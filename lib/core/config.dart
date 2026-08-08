@@ -35,8 +35,7 @@ const tmdbApiKey = String.fromEnvironment('TMDB_API_KEY');
 /// Streaming market used to resolve "where to watch" providers and regional
 /// release dates, as an ISO 3166-1 country code. Separate from the interface
 /// language: where you live is not what language you read in.
-const watchRegion =
-    String.fromEnvironment('WATCH_REGION', defaultValue: 'FR');
+const watchRegion = String.fromEnvironment('WATCH_REGION', defaultValue: 'FR');
 
 /// TheTVDB API key (v4), the primary metadata source for shows: season layout,
 /// episode titles and overviews, artwork, air dates, status and network.

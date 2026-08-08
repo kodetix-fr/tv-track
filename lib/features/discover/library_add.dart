@@ -36,8 +36,9 @@ class LibraryAdd extends _$LibraryAdd {
     try {
       final tvdbId = await tmdb.tvdbIdByTmdb(item.tmdbId);
       if (tvdbId == null) return false; // no TheTVDB counterpart to track
-      if ((ref.read(showsProvider).value ?? const [])
-          .any((s) => s.tvdbId == tvdbId)) {
+      if ((ref.read(showsProvider).value ?? const []).any(
+        (s) => s.tvdbId == tvdbId,
+      )) {
         return false;
       }
       // Start from what the catalog card already carries…
@@ -53,8 +54,9 @@ class LibraryAdd extends _$LibraryAdd {
         show = await enrichShowFromTvdb(show, tvdb, tmdb: tmdb);
       } else {
         show = show.copyWith(
-          providers:
-              await tmdb.tvProviders(item.tmdbId).catchError((_) => <String>[]),
+          providers: await tmdb
+              .tvProviders(item.tmdbId)
+              .catchError((_) => <String>[]),
         );
       }
       await repo.saveShow(show);
@@ -69,7 +71,9 @@ class LibraryAdd extends _$LibraryAdd {
     final tmdb = ref.read(tmdbApiProvider);
     if (repo == null || tmdb == null) return false;
     try {
-      final imdbId = await tmdb.movieImdbId(item.tmdbId).catchError((_) => null);
+      final imdbId = await tmdb
+          .movieImdbId(item.tmdbId)
+          .catchError((_) => null);
       // Movies added here key their document on the TMDB id, since they have
       // no TheTVDB id to key on.
       final movie = Movie(

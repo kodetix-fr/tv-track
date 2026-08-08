@@ -72,32 +72,34 @@ class FeaturedCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(overline.toUpperCase(),
-                              style: mono(
-                                  size: 11,
-                                  color: tungsten,
-                                  letterSpacing: 1.6)),
+                          Text(
+                            overline.toUpperCase(),
+                            style: mono(
+                              size: 11,
+                              color: tungsten,
+                              letterSpacing: 1.6,
+                            ),
+                          ),
                           const SizedBox(height: 6),
-                          Text(title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: condensed(
-                                  size: 27, weight: FontWeight.w700)),
+                          Text(
+                            title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: condensed(size: 27, weight: FontWeight.w700),
+                          ),
                           const SizedBox(height: 4),
-                          Text(line,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: linen)),
+                          Text(
+                            line,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: linen),
+                          ),
                         ],
                       ),
                     ),
-                    if (action != null) ...[
-                      const SizedBox(width: 12),
-                      action!,
-                    ],
+                    if (action != null) ...[const SizedBox(width: 12), action!],
                   ],
                 ),
               ),
@@ -115,15 +117,15 @@ class FeaturedCard extends StatelessWidget {
   }
 
   Widget _fallback(double hue) => DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              HSLColor.fromAHSL(1, hue, .30, .28).toColor(),
-              HSLColor.fromAHSL(1, (hue + 40) % 360, .30, .14).toColor(),
-            ],
-          ),
-        ),
-      );
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          HSLColor.fromAHSL(1, hue, .30, .28).toColor(),
+          HSLColor.fromAHSL(1, (hue + 40) % 360, .30, .14).toColor(),
+        ],
+      ),
+    ),
+  );
 }

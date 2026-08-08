@@ -62,7 +62,10 @@ class CatalogPoster extends ConsumerWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: condensed(
-                size: 12.5, color: tracked ? dust : linen, letterSpacing: .2),
+              size: 12.5,
+              color: tracked ? dust : linen,
+              letterSpacing: .2,
+            ),
           ),
         ],
       ),
@@ -72,19 +75,21 @@ class CatalogPoster extends ConsumerWidget {
   final CatalogItem item;
 
   Widget _fallback(double hue) => DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              HSLColor.fromAHSL(1, hue, .28, .26).toColor(),
-              HSLColor.fromAHSL(1, (hue + 40) % 360, .28, .15).toColor(),
-            ],
-          ),
-        ),
-        child: Center(
-          child: Text(item.title.isEmpty ? '?' : item.title.characters.first,
-              style: condensed(size: 28, color: Colors.white70)),
-        ),
-      );
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          HSLColor.fromAHSL(1, hue, .28, .26).toColor(),
+          HSLColor.fromAHSL(1, (hue + 40) % 360, .28, .15).toColor(),
+        ],
+      ),
+    ),
+    child: Center(
+      child: Text(
+        item.title.isEmpty ? '?' : item.title.characters.first,
+        style: condensed(size: 28, color: Colors.white70),
+      ),
+    ),
+  );
 }

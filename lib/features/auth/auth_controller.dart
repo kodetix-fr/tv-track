@@ -10,9 +10,8 @@ part 'auth_controller.g.dart';
 /// Initialisation unique du plugin google_sign_in.
 @Riverpod(keepAlive: true)
 Future<void> googleSignInInit(Ref ref) => GoogleSignIn.instance.initialize(
-      serverClientId:
-          googleServerClientId.isEmpty ? null : googleServerClientId,
-    );
+  serverClientId: googleServerClientId.isEmpty ? null : googleServerClientId,
+);
 
 @riverpod
 class AuthController extends _$AuthController {

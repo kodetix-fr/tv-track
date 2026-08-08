@@ -19,14 +19,13 @@ TextStyle mono({
   Color color = dust,
   FontWeight weight = FontWeight.w500,
   double? letterSpacing,
-}) =>
-    GoogleFonts.ibmPlexMono(
-      fontSize: size,
-      fontWeight: weight,
-      color: color,
-      height: 1.3,
-      letterSpacing: letterSpacing,
-    );
+}) => GoogleFonts.ibmPlexMono(
+  fontSize: size,
+  fontWeight: weight,
+  color: color,
+  height: 1.3,
+  letterSpacing: letterSpacing,
+);
 
 /// For titles, on tiles and screens alike.
 TextStyle condensed({
@@ -34,14 +33,13 @@ TextStyle condensed({
   Color color = linen,
   FontWeight weight = FontWeight.w600,
   double letterSpacing = 0.2,
-}) =>
-    GoogleFonts.barlowSemiCondensed(
-      fontSize: size,
-      fontWeight: weight,
-      color: color,
-      letterSpacing: letterSpacing,
-      height: 1.15,
-    );
+}) => GoogleFonts.barlowSemiCondensed(
+  fontSize: size,
+  fontWeight: weight,
+  color: color,
+  letterSpacing: letterSpacing,
+  height: 1.15,
+);
 
 ThemeData buildTheme() {
   const scheme = ColorScheme(
@@ -101,9 +99,11 @@ ThemeData buildTheme() {
       backgroundColor: const Color(0xFF171410),
       indicatorColor: Colors.transparent,
       height: 66,
-      iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
-            color: states.contains(WidgetState.selected) ? tungsten : dust,
-          )),
+      iconTheme: WidgetStateProperty.resolveWith(
+        (states) => IconThemeData(
+          color: states.contains(WidgetState.selected) ? tungsten : dust,
+        ),
+      ),
       labelTextStyle: WidgetStateProperty.resolveWith(
         (states) => GoogleFonts.barlowSemiCondensed(
           fontSize: 12.5,
@@ -124,8 +124,10 @@ ThemeData buildTheme() {
       iconColor: dust,
       collapsedIconColor: dust,
     ),
-    pageTransitionsTheme: const PageTransitionsTheme(builders: {
-      TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
-    }),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+      },
+    ),
   );
 }

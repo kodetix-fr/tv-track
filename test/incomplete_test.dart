@@ -13,27 +13,29 @@ void main() {
   );
 
   Show completeShow() => Show(
-        tvdbId: 1,
-        title: 'X',
-        tmdbId: 42,
-        overview: 'A family moves to a small town and they discover a secret '
-            'that was buried for years.',
-        poster: 'https://img/poster.jpg',
-        seasons: [
-          Season(number: 1, episodes: [airedEpisode]),
-        ],
-      );
+    tvdbId: 1,
+    title: 'X',
+    tmdbId: 42,
+    overview:
+        'A family moves to a small town and they discover a secret '
+        'that was buried for years.',
+    poster: 'https://img/poster.jpg',
+    seasons: [
+      Season(number: 1, episodes: [airedEpisode]),
+    ],
+  );
 
   Movie completeMovie() => const Movie(
-        tvdbId: 1,
-        title: 'X',
-        tmdbId: 42,
-        overview: 'A heist goes wrong and the crew turns on each other while '
-            'they are hiding in the basement.',
-        poster: 'https://img/poster.jpg',
-        backdrop: 'https://img/backdrop.jpg',
-        runtime: 118,
-      );
+    tvdbId: 1,
+    title: 'X',
+    tmdbId: 42,
+    overview:
+        'A heist goes wrong and the crew turns on each other while '
+        'they are hiding in the basement.',
+    poster: 'https://img/poster.jpg',
+    backdrop: 'https://img/backdrop.jpg',
+    runtime: 118,
+  );
 
   group('Show.isIncomplete', () {
     test('a fully enriched show needs nothing', () {
@@ -53,24 +55,34 @@ void main() {
     });
 
     test('a bare season, aired but never enriched by any provider', () {
-      final withBareS2 = completeShow().copyWith(seasons: [
-        ...completeShow().seasons,
-        const Season(number: 2, episodes: [
-          Episode(tvdbId: 20, number: 1, name: 'Stendhal Syndrome'),
-          Episode(tvdbId: 21, number: 2, name: 'Oranges from China'),
-        ]),
-      ]);
+      final withBareS2 = completeShow().copyWith(
+        seasons: [
+          ...completeShow().seasons,
+          const Season(
+            number: 2,
+            episodes: [
+              Episode(tvdbId: 20, number: 1, name: 'Stendhal Syndrome'),
+              Episode(tvdbId: 21, number: 2, name: 'Oranges from China'),
+            ],
+          ),
+        ],
+      );
       expect(withBareS2.isIncomplete, isTrue);
     });
 
     test('an upcoming episode carries a date, so it is not bare', () {
       // Otherwise every show with a scheduled episode would repair on loop.
-      final upcoming = completeShow().copyWith(seasons: [
-        Season(number: 1, episodes: [
-          airedEpisode,
-          Episode(tvdbId: 11, number: 2, airDate: DateTime(2035, 1, 1)),
-        ]),
-      ]);
+      final upcoming = completeShow().copyWith(
+        seasons: [
+          Season(
+            number: 1,
+            episodes: [
+              airedEpisode,
+              Episode(tvdbId: 11, number: 2, airDate: DateTime(2035, 1, 1)),
+            ],
+          ),
+        ],
+      );
       expect(upcoming.isIncomplete, isFalse);
     });
   });

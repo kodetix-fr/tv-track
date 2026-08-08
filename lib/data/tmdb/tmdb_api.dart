@@ -21,17 +21,16 @@ enum CatalogSort {
 /// catalog, global search, streaming providers, movie details and as a fallback
 /// for seasons TheTVDB has not published yet.
 class TmdbApi {
-  TmdbApi(
-    this._apiKey, {
-    this.language = 'en-US',
-    this.region = 'US',
-    Dio? dio,
-  }) : _dio = dio ??
-            Dio(BaseOptions(
+  TmdbApi(this._apiKey, {this.language = 'en-US', this.region = 'US', Dio? dio})
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
               baseUrl: 'https://api.themoviedb.org/3',
               connectTimeout: const Duration(seconds: 10),
               receiveTimeout: const Duration(seconds: 10),
-            ));
+            ),
+          );
 
   final String _apiKey;
   final Dio _dio;
@@ -44,8 +43,11 @@ class TmdbApi {
 
   static const imageBase = 'https://image.tmdb.org/t/p';
 
-  Map<String, dynamic> _params([Map<String, dynamic> extra = const {}]) =>
-      {'api_key': _apiKey, 'language': language, ...extra};
+  Map<String, dynamic> _params([Map<String, dynamic> extra = const {}]) => {
+    'api_key': _apiKey,
+    'language': language,
+    ...extra,
+  };
 
   /// Movie details from an IMDB id (e.g. `tt29623480`), which is what the TV
   /// Time export stores. Null when TMDB does not know the film.
@@ -104,8 +106,9 @@ class TmdbApi {
       '/tv/$tmdbTvId/watch/providers',
       queryParameters: {'api_key': _apiKey},
     );
-    final country = (response.data?['results'] as Map<String, dynamic>?)?[region]
-        as Map<String, dynamic>?;
+    final country =
+        (response.data?['results'] as Map<String, dynamic>?)?[region]
+            as Map<String, dynamic>?;
     final flatrate = country?['flatrate'] as List?;
     if (flatrate == null) return const [];
     final seen = <String>{};
@@ -149,7 +152,8 @@ class TmdbApi {
   /// Localized overview and poster for a show. Used to move a record left in
   /// another language over to the current one.
   Future<({String? overview, String? poster, String? posterLarge})> tvDetails(
-      int tmdbTvId) async {
+    int tmdbTvId,
+  ) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/tv/$tmdbTvId',
       queryParameters: _params(),
@@ -234,8 +238,11 @@ class TmdbApi {
     return _items(response.data, kind);
   }
 
-  Future<List<CatalogItem>> search(MediaKind kind, String query,
-      {int page = 1}) async {
+  Future<List<CatalogItem>> search(
+    MediaKind kind,
+    String query, {
+    int page = 1,
+  }) async {
     if (query.trim().isEmpty) return const [];
     final response = await _dio.get<Map<String, dynamic>>(
       '/search/${kind.path}',
@@ -261,7 +268,8 @@ class TmdbApi {
     return (id == null || id.isEmpty) ? null : id;
   }
 
-  Future<List<TmdbTv>> popularTv({int page = 1}) => _tvList('/tv/popular', page);
+  Future<List<TmdbTv>> popularTv({int page = 1}) =>
+      _tvList('/tv/popular', page);
 
   Future<List<TmdbTv>> trendingTv({int page = 1}) =>
       _tvList('/trending/tv/week', page);
@@ -331,15 +339,15 @@ class TmdbTv {
   });
 
   factory TmdbTv.fromJson(Map<String, dynamic> json) => TmdbTv(
-        id: json['id'] as int,
-        name: (json['name'] ?? json['original_name']) as String? ?? '',
-        overview: (json['overview'] as String?)?.isEmpty ?? true
-            ? null
-            : json['overview'] as String,
-        posterPath: json['poster_path'] as String?,
-        firstAirDate: json['first_air_date'] as String?,
-        voteAverage: (json['vote_average'] as num?)?.toDouble(),
-      );
+    id: json['id'] as int,
+    name: (json['name'] ?? json['original_name']) as String? ?? '',
+    overview: (json['overview'] as String?)?.isEmpty ?? true
+        ? null
+        : json['overview'] as String,
+    posterPath: json['poster_path'] as String?,
+    firstAirDate: json['first_air_date'] as String?,
+    voteAverage: (json['vote_average'] as num?)?.toDouble(),
+  );
 
   final int id;
   final String name;

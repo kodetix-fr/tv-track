@@ -44,8 +44,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
         if (mounted) ref.read(liveRepairProvider.notifier).repairMovie(movie);
       });
     }
-    final repairing =
-        ref.watch(liveRepairProvider).contains('movie-${widget.tvdbId}');
+    final repairing = ref
+        .watch(liveRepairProvider)
+        .contains('movie-${widget.tvdbId}');
 
     return Scaffold(
       body: CustomScrollView(
@@ -76,10 +77,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
         title: Text(l10n.deleteMovieTitle, style: condensed(size: 18)),
         content: Text(
           l10n.deleteMovieBody(movie.title),
-          style: Theme.of(ctx)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: dust, height: 1.4),
+          style: Theme.of(
+            ctx,
+          ).textTheme.bodyMedium?.copyWith(color: dust, height: 1.4),
         ),
         actions: [
           TextButton(
@@ -88,8 +88,10 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child:
-                Text(l10n.delete, style: condensed(size: 15, color: tungsten)),
+            child: Text(
+              l10n.delete,
+              style: condensed(size: 15, color: tungsten),
+            ),
           ),
         ],
       ),
@@ -102,8 +104,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
     final messenger = ScaffoldMessenger.of(context);
     context.pop();
     await repo.deleteMovie(movie.tvdbId);
-    messenger
-        .showSnackBar(SnackBar(content: Text(l10n.movieRemoved(movie.title))));
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.movieRemoved(movie.title))),
+    );
   }
 }
 
@@ -122,8 +125,10 @@ class _RepairBanner extends StatelessWidget {
             child: CircularProgressIndicator(strokeWidth: 1.6, color: dust),
           ),
           const SizedBox(width: 10),
-          Text(AppLocalizations.of(context).updatingInfo,
-              style: mono(size: 11, color: dust)),
+          Text(
+            AppLocalizations.of(context).updatingInfo,
+            style: mono(size: 11, color: dust),
+          ),
         ],
       ),
     );
@@ -154,30 +159,38 @@ class _Header extends StatelessWidget {
         // Wider end inset when the delete action shows, so the collapsed
         // title does not slide under the icon.
         titlePadding: EdgeInsetsDirectional.only(
-            start: 56, bottom: 14, end: onDelete != null ? 56 : 16),
-        title: Text(movie.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: condensed(size: 17)),
+          start: 56,
+          bottom: 14,
+          end: onDelete != null ? 56 : 16,
+        ),
+        title: Text(
+          movie.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: condensed(size: 17),
+        ),
         background: backdrop == null
             ? null
-            : Stack(fit: StackFit.expand, children: [
-                CachedNetworkImage(imageUrl: backdrop, fit: BoxFit.cover),
-                const DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black45,
-                        Colors.transparent,
-                        Color(0xE612100D)
-                      ],
-                      stops: [0, .5, 1],
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  CachedNetworkImage(imageUrl: backdrop, fit: BoxFit.cover),
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black45,
+                          Colors.transparent,
+                          Color(0xE612100D),
+                        ],
+                        stops: [0, .5, 1],
+                      ),
                     ),
                   ),
-                ),
-              ]),
+                ],
+              ),
       ),
     );
   }
@@ -210,17 +223,18 @@ class _Body extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               movie.overview!,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: linen.withValues(alpha: .85), height: 1.5),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: linen.withValues(alpha: .85),
+                height: 1.5,
+              ),
             ),
           ] else
-            Text(l10n.noOverview,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: dust)),
+            Text(
+              l10n.noOverview,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: dust),
+            ),
         ],
       ),
     );
@@ -240,18 +254,25 @@ class _WatchedButton extends ConsumerWidget {
       foregroundColor: watched ? linen : const Color(0xFF221603),
       icon: Icon(watched ? Icons.check_circle : Icons.check_circle_outline),
       label: Text(
-          watched
-              ? AppLocalizations.of(context).watched
-              : AppLocalizations.of(context).markWatched,
-          style: condensed(
-              size: 15, color: watched ? linen : const Color(0xFF221603))),
+        watched
+            ? AppLocalizations.of(context).watched
+            : AppLocalizations.of(context).markWatched,
+        style: condensed(
+          size: 15,
+          color: watched ? linen : const Color(0xFF221603),
+        ),
+      ),
       onPressed: () {
         HapticFeedback.lightImpact();
         final now = !watched;
-        ref.read(trackingRepositoryProvider)?.saveMovie(movie.copyWith(
-              watched: now,
-              watchedAt: now ? DateTime.now() : null,
-            ));
+        ref
+            .read(trackingRepositoryProvider)
+            ?.saveMovie(
+              movie.copyWith(
+                watched: now,
+                watchedAt: now ? DateTime.now() : null,
+              ),
+            );
       },
     );
   }

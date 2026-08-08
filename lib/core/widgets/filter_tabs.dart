@@ -32,8 +32,7 @@ class FilterTabs<T> extends StatelessWidget {
                   border: Border(
                     bottom: BorderSide(
                       width: 2,
-                      color:
-                          value == selected ? tungsten : Colors.transparent,
+                      color: value == selected ? tungsten : Colors.transparent,
                     ),
                   ),
                 ),
@@ -49,10 +48,13 @@ class FilterTabs<T> extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text('$count',
-                        style: mono(
-                            size: 11,
-                            color: value == selected ? tungsten : dust)),
+                    Text(
+                      '$count',
+                      style: mono(
+                        size: 11,
+                        color: value == selected ? tungsten : dust,
+                      ),
+                    ),
                   ],
                 ),
               ),

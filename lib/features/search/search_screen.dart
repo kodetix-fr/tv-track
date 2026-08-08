@@ -27,8 +27,10 @@ class SearchScreen extends HookConsumerWidget {
 
     // Debounce before hitting TMDB.
     useEffect(() {
-      final t = Timer(const Duration(milliseconds: 300),
-          () => query.value = raw.value.trim());
+      final t = Timer(
+        const Duration(milliseconds: 300),
+        () => query.value = raw.value.trim(),
+      );
       return t.cancel;
     }, [raw.value]);
 
@@ -62,8 +64,8 @@ class SearchScreen extends HookConsumerWidget {
       ),
       body: q.length < 2
           ? Center(
-              child:
-                  Text(l10n.searchMinChars, style: TextStyle(color: dust)))
+              child: Text(l10n.searchMinChars, style: TextStyle(color: dust)),
+            )
           : ListView(
               padding: const EdgeInsets.only(bottom: 24),
               children: [
@@ -71,40 +73,51 @@ class SearchScreen extends HookConsumerWidget {
                   _label(l10n.myLibrary),
                   for (final s in shows)
                     _LibraryRow(
-                        title: s.title,
-                        subtitle: l10n.showProgress(
-                            s.watchedEpisodes, s.totalEpisodes),
-                        posterUrl: s.poster,
-                        seed: s.tvdbId,
-                        onTap: () => context.push('/show/${s.tvdbId}')),
+                      title: s.title,
+                      subtitle: l10n.showProgress(
+                        s.watchedEpisodes,
+                        s.totalEpisodes,
+                      ),
+                      posterUrl: s.poster,
+                      seed: s.tvdbId,
+                      onTap: () => context.push('/show/${s.tvdbId}'),
+                    ),
                   for (final m in movies)
                     _LibraryRow(
-                        title: m.title,
-                        subtitle:
-                            '${l10n.kindMovie}${m.year != null ? ' · ${m.year}' : ''}',
-                        posterUrl: m.poster,
-                        seed: m.tvdbId,
-                        onTap: () => context.push('/movie/${m.tvdbId}')),
+                      title: m.title,
+                      subtitle:
+                          '${l10n.kindMovie}${m.year != null ? ' · ${m.year}' : ''}',
+                      posterUrl: m.poster,
+                      seed: m.tvdbId,
+                      onTap: () => context.push('/movie/${m.tvdbId}'),
+                    ),
                 ],
                 _label(l10n.tabDiscover),
                 ...tmdb.when(
                   loading: () => [
                     const Padding(
-                        padding: EdgeInsets.all(24),
-                        child: Center(child: CircularProgressIndicator()))
+                      padding: EdgeInsets.all(24),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
                   ],
                   error: (_, _) => [
                     Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Text(l10n.searchUnavailable,
-                            style: TextStyle(color: dust)))
+                      padding: const EdgeInsets.all(24),
+                      child: Text(
+                        l10n.searchUnavailable,
+                        style: TextStyle(color: dust),
+                      ),
+                    ),
                   ],
                   data: (items) => items.isEmpty
                       ? [
                           Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Text(l10n.noResults,
-                                  style: TextStyle(color: dust)))
+                            padding: const EdgeInsets.all(24),
+                            child: Text(
+                              l10n.noResults,
+                              style: TextStyle(color: dust),
+                            ),
+                          ),
                         ]
                       : [
                           for (final item in items)
@@ -127,9 +140,9 @@ class SearchScreen extends HookConsumerWidget {
   }
 
   Widget _label(String t) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
-        child: SectionLabel(t),
-      );
+    padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
+    child: SectionLabel(t),
+  );
 }
 
 class _LibraryRow extends StatelessWidget {
@@ -155,24 +168,28 @@ class _LibraryRow extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        child: Row(children: [
-          Poster(title: title, seed: seed, url: posterUrl, width: 42),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
+        child: Row(
+          children: [
+            Poster(title: title, seed: seed, url: posterUrl, width: 42),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: condensed(size: 15)),
-                const SizedBox(height: 2),
-                Text(subtitle, style: mono(size: 10.5)),
-              ],
+                    style: condensed(size: 15),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(subtitle, style: mono(size: 10.5)),
+                ],
+              ),
             ),
-          ),
-          if (tracked) const Icon(Icons.check, size: 18, color: tungsten),
-        ]),
+            if (tracked) const Icon(Icons.check, size: 18, color: tungsten),
+          ],
+        ),
       ),
     );
   }

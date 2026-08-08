@@ -13,8 +13,9 @@ class SeasonProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final seasons =
-        show.regularSeasons.where((s) => s.episodes.isNotEmpty).toList();
+    final seasons = show.regularSeasons
+        .where((s) => s.episodes.isNotEmpty)
+        .toList();
     if (seasons.isEmpty) return SizedBox(height: height);
 
     return Row(
@@ -27,15 +28,18 @@ class SeasonProgressBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(height / 2),
               child: SizedBox(
                 height: height,
-                child: Stack(children: [
-                  const Positioned.fill(
-                      child: ColoredBox(color: charcoalHigh)),
-                  FractionallySizedBox(
-                    widthFactor: season.watchedCount / season.episodes.length,
-                    heightFactor: 1,
-                    child: const ColoredBox(color: tungsten),
-                  ),
-                ]),
+                child: Stack(
+                  children: [
+                    const Positioned.fill(
+                      child: ColoredBox(color: charcoalHigh),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: season.watchedCount / season.episodes.length,
+                      heightFactor: 1,
+                      child: const ColoredBox(color: tungsten),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

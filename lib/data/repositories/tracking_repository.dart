@@ -24,10 +24,12 @@ class TrackingRepository {
       _db.collection('users').doc(uid).collection('discover_seen');
 
   Stream<List<Show>> watchShows() => _shows.snapshots().map(
-      (snap) => snap.docs.map((d) => Show.fromJson(d.data())).toList());
+    (snap) => snap.docs.map((d) => Show.fromJson(d.data())).toList(),
+  );
 
   Stream<List<Movie>> watchMovies() => _movies.snapshots().map(
-      (snap) => snap.docs.map((d) => Movie.fromJson(d.data())).toList());
+    (snap) => snap.docs.map((d) => Movie.fromJson(d.data())).toList(),
+  );
 
   Future<void> saveShow(Show show) =>
       _shows.doc('${show.tvdbId}').set(show.toJson());
@@ -42,7 +44,8 @@ class TrackingRepository {
   /// Keys are namespaced by media kind ("tv_123" / "movie_123") because TMDB
   /// show and movie ids overlap.
   Stream<Set<String>> watchSeenKeys() => _discoverSeen.snapshots().map(
-      (snap) => snap.docs.map((d) => d.id).toSet());
+    (snap) => snap.docs.map((d) => d.id).toSet(),
+  );
 
   Future<void> markDiscoverSeen(String key, {required bool liked}) =>
       _discoverSeen.doc(key).set({

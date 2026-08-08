@@ -26,15 +26,18 @@ class CatalogItem {
     return CatalogItem(
       tmdbId: json['id'] as int,
       kind: kind,
-      title: (kind.isTv
-              ? (json['name'] ?? json['original_name'])
-              : (json['title'] ?? json['original_title'])) as String? ??
+      title:
+          (kind.isTv
+                  ? (json['name'] ?? json['original_name'])
+                  : (json['title'] ?? json['original_title']))
+              as String? ??
           '',
       overview: (overview == null || overview.isEmpty) ? null : overview,
       posterPath: json['poster_path'] as String?,
       backdropPath: json['backdrop_path'] as String?,
-      date: (kind.isTv ? json['first_air_date'] : json['release_date'])
-          as String?,
+      date:
+          (kind.isTv ? json['first_air_date'] : json['release_date'])
+              as String?,
       voteAverage: (json['vote_average'] as num?)?.toDouble(),
     );
   }
@@ -59,8 +62,9 @@ class CatalogItem {
   String? get backdropUrl =>
       backdropPath == null ? null : '$_imageBase/w780$backdropPath';
 
-  int? get year =>
-      (date != null && date!.length >= 4) ? int.tryParse(date!.substring(0, 4)) : null;
+  int? get year => (date != null && date!.length >= 4)
+      ? int.tryParse(date!.substring(0, 4))
+      : null;
 }
 
 typedef Genre = ({int id, String name});

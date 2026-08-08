@@ -44,7 +44,11 @@ class Poster extends StatelessWidget {
 }
 
 class _Fallback extends StatelessWidget {
-  const _Fallback({required this.title, required this.seed, required this.width});
+  const _Fallback({
+    required this.title,
+    required this.seed,
+    required this.width,
+  });
 
   final String title;
   final int seed;

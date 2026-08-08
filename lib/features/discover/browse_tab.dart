@@ -22,8 +22,11 @@ class BrowseTab extends ConsumerWidget {
     return genres.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(
-          child: Text(AppLocalizations.of(context).loadFailed,
-              style: TextStyle(color: dust))),
+        child: Text(
+          AppLocalizations.of(context).loadFailed,
+          style: TextStyle(color: dust),
+        ),
+      ),
       data: (list) {
         final rails = <({String title, int? genreId})>[
           (title: AppLocalizations.of(context).railTrending, genreId: null),
@@ -64,18 +67,27 @@ class _Rail extends ConsumerWidget {
               Container(width: 14, height: 2, color: tungsten),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(title.toUpperCase(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: mono(size: 12, color: linen, letterSpacing: 1.2)),
+                child: Text(
+                  title.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: mono(size: 12, color: linen, letterSpacing: 1.2),
+                ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => CategoryScreen(
-                      kind: kind, title: title, genreId: genreId),
-                )),
-                child: Text(AppLocalizations.of(context).seeAll,
-                    style: mono(size: 11, color: tungsten)),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => CategoryScreen(
+                      kind: kind,
+                      title: title,
+                      genreId: genreId,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  AppLocalizations.of(context).seeAll,
+                  style: mono(size: 11, color: tungsten),
+                ),
               ),
             ],
           ),
@@ -84,10 +96,12 @@ class _Rail extends ConsumerWidget {
           height: 208,
           child: row.when(
             loading: () => const Center(
-                child: SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2))),
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
             error: (e, _) => const SizedBox.shrink(),
             data: (items) => ListView.separated(
               scrollDirection: Axis.horizontal,

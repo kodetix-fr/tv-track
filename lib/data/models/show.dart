@@ -74,7 +74,8 @@ abstract class Season with _$Season {
   factory Season.fromJson(Map<String, dynamic> json) => _$SeasonFromJson(json);
 
   int get watchedCount => episodes.where((e) => e.watched).length;
-  bool get isCompleted => episodes.isNotEmpty && watchedCount == episodes.length;
+  bool get isCompleted =>
+      episodes.isNotEmpty && watchedCount == episodes.length;
 }
 
 /// An episode together with the season it belongs to, for "S02E05" display.
@@ -211,7 +212,8 @@ abstract class Show with _$Show {
     var count = 0;
     for (final season in regularSeasons) {
       for (final episode in season.episodes) {
-        final before = season.number < seasonNumber ||
+        final before =
+            season.number < seasonNumber ||
             (season.number == seasonNumber && episode.number < episodeNumber);
         if (before && !episode.watched) count++;
       }

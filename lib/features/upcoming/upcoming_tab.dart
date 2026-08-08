@@ -13,7 +13,12 @@ import '../../data/models/show.dart';
 import '../../l10n/app_localizations.dart';
 
 /// An upcoming episode, carrying the show and season it belongs to.
-typedef Upcoming = ({Show show, Season season, Episode episode, DateTime airDate});
+typedef Upcoming = ({
+  Show show,
+  Season season,
+  Episode episode,
+  DateTime airDate,
+});
 
 /// Every future-dated episode across tracked shows, soonest first.
 final upcomingProvider = Provider<List<Upcoming>>((ref) {
@@ -25,7 +30,12 @@ final upcomingProvider = Provider<List<Upcoming>>((ref) {
       for (final episode in season.episodes) {
         final date = episode.airDate;
         if (date != null && date.isAfter(now)) {
-          items.add((show: show, season: season, episode: episode, airDate: date));
+          items.add((
+            show: show,
+            season: season,
+            episode: episode,
+            airDate: date,
+          ));
         }
       }
     }
@@ -48,8 +58,10 @@ class UpcomingTab extends ConsumerWidget {
     // The soonest airing gets the hero card; the rest fills the agenda.
     final hero = upcoming.first;
     final rest = upcoming.skip(1).toList();
-    final byDay = groupBy(rest,
-        (Upcoming u) => DateTime(u.airDate.year, u.airDate.month, u.airDate.day));
+    final byDay = groupBy(
+      rest,
+      (Upcoming u) => DateTime(u.airDate.year, u.airDate.month, u.airDate.day),
+    );
     final days = byDay.keys.sorted((a, b) => a.compareTo(b));
 
     return ListView(
@@ -65,28 +77,29 @@ class UpcomingTab extends ConsumerWidget {
   }
 
   Widget _empty(BuildContext context) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.event_available_outlined, size: 56, color: dust),
-            const SizedBox(height: 12),
-            Text(AppLocalizations.of(context).noUpcoming,
-                style: condensed(size: 17)),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 48),
-              child: Text(
-                AppLocalizations.of(context).noUpcomingBody,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: dust),
-              ),
-            ),
-          ],
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.event_available_outlined, size: 56, color: dust),
+        const SizedBox(height: 12),
+        Text(
+          AppLocalizations.of(context).noUpcoming,
+          style: condensed(size: 17),
         ),
-      );
+        const SizedBox(height: 6),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 48),
+          child: Text(
+            AppLocalizations.of(context).noUpcomingBody,
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: dust),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _Hero extends StatelessWidget {
@@ -99,15 +112,18 @@ class _Hero extends StatelessWidget {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final day = DateTime(
-        item.airDate.year, item.airDate.month, item.airDate.day);
+      item.airDate.year,
+      item.airDate.month,
+      item.airDate.day,
+    );
     final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
     final diff = day.difference(today).inDays;
     final when = diff == 0
         ? l10n.tonight
         : diff == 1
-            ? l10n.tomorrow
-            : DateFormat('EEEE d MMMM', locale).format(day);
+        ? l10n.tomorrow
+        : DateFormat('EEEE d MMMM', locale).format(day);
 
     final ep = item.episode;
     final line = [
@@ -187,42 +203,51 @@ class _UpcomingRow extends StatelessWidget {
         child: Row(
           children: [
             Poster(
-                title: item.show.title,
-                seed: item.show.tvdbId,
-                url: item.show.poster,
-                width: 44),
+              title: item.show.title,
+              seed: item.show.tvdbId,
+              url: item.show.poster,
+              width: 44,
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.show.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: condensed(size: 15)),
+                  Text(
+                    item.show.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: condensed(size: 15),
+                  ),
                   const SizedBox(height: 4),
-                  Row(children: [
-                    EpisodeTag(
-                        'S${_pad(item.season.number)}E${_pad(ep.number)}'),
-                    if (ep.name.isNotEmpty) ...[
-                      const SizedBox(width: 7),
-                      Expanded(
-                        child: Text(ep.name,
+                  Row(
+                    children: [
+                      EpisodeTag(
+                        'S${_pad(item.season.number)}E${_pad(ep.number)}',
+                      ),
+                      if (ep.name.isNotEmpty) ...[
+                        const SizedBox(width: 7),
+                        Expanded(
+                          child: Text(
+                            ep.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: dust)),
-                      ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: dust),
+                          ),
+                        ),
+                      ],
                     ],
-                  ]),
+                  ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            Text(DateFormat('HH:mm').format(item.airDate.toLocal()),
-                style: mono(size: 11, color: tungsten)),
+            Text(
+              DateFormat('HH:mm').format(item.airDate.toLocal()),
+              style: mono(size: 11, color: tungsten),
+            ),
           ],
         ),
       ),

@@ -17,13 +17,13 @@ Future<void> main() async {
   // Needed by DateFormat for the weekday and month names on the Upcoming tab.
   await initializeDateFormatting();
   final prefs = await SharedPreferences.getInstance();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: const TvTrackApp(),
+    ),
   );
-  runApp(ProviderScope(
-    overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-    child: const TvTrackApp(),
-  ));
 }
 
 class TvTrackApp extends ConsumerWidget {

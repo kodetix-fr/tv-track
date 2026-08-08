@@ -8,11 +8,11 @@ import 'tvdb_api.dart';
 
 /// TheTVDB status vocabulary mapped onto the app's own.
 String? _mapStatus(String? s) => switch (s) {
-      'Continuing' => 'Running',
-      'Ended' => 'Ended',
-      null => null,
-      _ => s,
-    };
+  'Continuing' => 'Running',
+  'Ended' => 'Ended',
+  null => null,
+  _ => s,
+};
 
 /// Merges TheTVDB metadata into an existing [Show].
 ///
@@ -22,15 +22,17 @@ String? _mapStatus(String? s) => switch (s) {
 /// progress tracking.
 Show mergeTvdb(Show show, TvdbSeries series, {required DateTime now}) {
   final bySeason = groupBy(
-      series.episodes.where((e) => !e.isSpecial && e.number > 0),
-      (TvdbEpisode e) => e.season);
+    series.episodes.where((e) => !e.isSpecial && e.number > 0),
+    (TvdbEpisode e) => e.season,
+  );
 
   final seasons = [...show.seasons];
 
   for (final entry in bySeason.entries) {
     final seasonNumber = entry.key;
-    final index =
-        seasons.indexWhere((s) => s.number == seasonNumber && !s.isSpecials);
+    final index = seasons.indexWhere(
+      (s) => s.number == seasonNumber && !s.isSpecials,
+    );
     final existing = index >= 0 ? seasons[index] : null;
     final byNumber = {
       for (final e in existing?.episodes ?? const <Episode>[]) e.number: e,
@@ -40,31 +42,36 @@ Show mergeTvdb(Show show, TvdbSeries series, {required DateTime now}) {
     for (final remote in entry.value.sorted((a, b) => a.number - b.number)) {
       final local = byNumber.remove(remote.number);
       if (local != null) {
-        merged.add(local.copyWith(
-          // TheTVDB wins on the title so a record left in another language
-          // gets replaced rather than kept.
-          name: remote.name.isNotEmpty ? remote.name : local.name,
-          airDate: remote.airDate ?? local.airDate,
-          overview: remote.overview ?? local.overview,
-          still: remote.still ?? local.still,
-        ));
+        merged.add(
+          local.copyWith(
+            // TheTVDB wins on the title so a record left in another language
+            // gets replaced rather than kept.
+            name: remote.name.isNotEmpty ? remote.name : local.name,
+            airDate: remote.airDate ?? local.airDate,
+            overview: remote.overview ?? local.overview,
+            still: remote.still ?? local.still,
+          ),
+        );
       } else {
-        merged.add(Episode(
-          tvdbId: -(seasonNumber * 1000 + remote.number),
-          number: remote.number,
-          name: remote.name,
-          airDate: remote.airDate,
-          overview: remote.overview,
-          still: remote.still,
-        ));
+        merged.add(
+          Episode(
+            tvdbId: -(seasonNumber * 1000 + remote.number),
+            number: remote.number,
+            name: remote.name,
+            airDate: remote.airDate,
+            overview: remote.overview,
+            still: remote.still,
+          ),
+        );
       }
     }
     // Keep local episodes TheTVDB does not list rather than dropping them.
     merged.addAll(byNumber.values);
     merged.sort((a, b) => a.number - b.number);
 
-    final season =
-        (existing ?? Season(number: seasonNumber)).copyWith(episodes: merged);
+    final season = (existing ?? Season(number: seasonNumber)).copyWith(
+      episodes: merged,
+    );
     if (index >= 0) {
       seasons[index] = season;
     } else {
@@ -126,18 +133,22 @@ Show _fitFirestore(Show show) {
   int size(Show s) => utf8.encode(jsonEncode(s.toJson())).length;
   if (size(show) <= maxBytes) return show;
 
-  var out = show.copyWith(seasons: [
-    for (final s in show.seasons)
-      s.copyWith(episodes: [
-        for (final e in s.episodes) e.copyWith(overview: null),
-      ]),
-  ]);
+  var out = show.copyWith(
+    seasons: [
+      for (final s in show.seasons)
+        s.copyWith(
+          episodes: [for (final e in s.episodes) e.copyWith(overview: null)],
+        ),
+    ],
+  );
   if (size(out) <= maxBytes) return out;
 
-  return out.copyWith(seasons: [
-    for (final s in out.seasons)
-      s.copyWith(episodes: [
-        for (final e in s.episodes) e.copyWith(still: null),
-      ]),
-  ]);
+  return out.copyWith(
+    seasons: [
+      for (final s in out.seasons)
+        s.copyWith(
+          episodes: [for (final e in s.episodes) e.copyWith(still: null)],
+        ),
+    ],
+  );
 }

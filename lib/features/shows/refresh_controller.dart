@@ -33,8 +33,7 @@ class MetadataRefresh extends _$MetadataRefresh {
     final tvdb = ref.read(tvdbApiProvider);
     if (tvdb == null) return; // no key: enrichment is disabled
 
-    final wantEnglish =
-        ref.read(localeControllerProvider) == AppLocale.english;
+    final wantEnglish = ref.read(localeControllerProvider) == AppLocale.english;
     final cutoff = DateTime.now().subtract(_staleAfter);
     bool isStale(Show s) =>
         s.metaRefreshedAt == null || s.metaRefreshedAt!.isBefore(cutoff);
@@ -46,14 +45,19 @@ class MetadataRefresh extends _$MetadataRefresh {
         // Routine upkeep for running shows with stale metadata.
         : (!s.isEnded && isStale(s));
 
-    final batch = shows.where(eligible).sorted((a, b) {
-      // Broken records first — that is the problem worth fixing.
-      final ra = needsRepair(a) ? 0 : 1;
-      final rb = needsRepair(b) ? 0 : 1;
-      if (ra != rb) return ra - rb;
-      return (b.lastWatchedAt ?? DateTime(1970))
-          .compareTo(a.lastWatchedAt ?? DateTime(1970));
-    }).take(_batchSize).toList();
+    final batch = shows
+        .where(eligible)
+        .sorted((a, b) {
+          // Broken records first — that is the problem worth fixing.
+          final ra = needsRepair(a) ? 0 : 1;
+          final rb = needsRepair(b) ? 0 : 1;
+          if (ra != rb) return ra - rb;
+          return (b.lastWatchedAt ?? DateTime(1970)).compareTo(
+            a.lastWatchedAt ?? DateTime(1970),
+          );
+        })
+        .take(_batchSize)
+        .toList();
     if (batch.isEmpty) return;
 
     _running = true;

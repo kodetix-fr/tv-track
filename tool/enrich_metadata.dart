@@ -25,7 +25,9 @@ import 'package:tv_track/data/tvdb/tvdb_api.dart';
 import 'firestore_rest.dart';
 
 Future<void> main(List<String> args) async {
-  final flags = args.where((a) => a.startsWith('--') && !a.contains('=')).toSet();
+  final flags = args
+      .where((a) => a.startsWith('--') && !a.contains('='))
+      .toSet();
   final opts = {
     for (var i = 0; i + 1 < args.length; i += 2)
       if (args[i].startsWith('--') && !args[i + 1].startsWith('--'))
@@ -34,8 +36,10 @@ Future<void> main(List<String> args) async {
   final uid = opts['uid'];
   final project = opts['project'];
   if (uid == null || project == null) {
-    stderr.writeln('Usage: dart run tool/enrich_metadata.dart '
-        '--uid <UID> --project <PROJECT_ID> [--lang en|fr]');
+    stderr.writeln(
+      'Usage: dart run tool/enrich_metadata.dart '
+      '--uid <UID> --project <PROJECT_ID> [--lang en|fr]',
+    );
     exit(1);
   }
   final only = opts['only'];
@@ -47,8 +51,7 @@ Future<void> main(List<String> args) async {
   final db = FirestoreRest(project: project, token: await gcloudToken());
 
   if (only == null || only == 'shows') {
-    await _enrichShows(db, uid,
-        onlyIncomplete: onlyIncomplete, french: french);
+    await _enrichShows(db, uid, onlyIncomplete: onlyIncomplete, french: french);
   }
   if (only == null || only == 'movies') {
     await _enrichMovies(db, uid, french: french);
@@ -56,8 +59,12 @@ Future<void> main(List<String> args) async {
   db.close();
 }
 
-Future<void> _enrichShows(FirestoreRest db, String uid,
-    {bool onlyIncomplete = false, bool french = false}) async {
+Future<void> _enrichShows(
+  FirestoreRest db,
+  String uid, {
+  bool onlyIncomplete = false,
+  bool french = false,
+}) async {
   final tvdbKey = Platform.environment['TVDB_API_KEY'];
   if (tvdbKey == null || tvdbKey.isEmpty) {
     stdout.writeln('TVDB_API_KEY not set: skipping shows.');
@@ -76,8 +83,10 @@ Future<void> _enrichShows(FirestoreRest db, String uid,
   if (onlyIncomplete) {
     docs = docs.where((d) => Show.fromJson(d.$2).isIncomplete).toList();
   }
-  stdout.writeln('${docs.length} shows to enrich from TheTVDB'
-      '${onlyIncomplete ? ' (incomplete only)' : ''}…');
+  stdout.writeln(
+    '${docs.length} shows to enrich from TheTVDB'
+    '${onlyIncomplete ? ' (incomplete only)' : ''}…',
+  );
   var updated = 0, errors = 0;
 
   for (final (i, (id, json)) in docs.indexed) {
@@ -87,10 +96,12 @@ Future<void> _enrichShows(FirestoreRest db, String uid,
       await db.patch('users/$uid/shows/$id', merged.toJson());
       updated++;
       final added = merged.totalEpisodes - show.totalEpisodes;
-      final prov =
-          merged.providers.isEmpty ? '' : ' [${merged.providers.join(', ')}]';
+      final prov = merged.providers.isEmpty
+          ? ''
+          : ' [${merged.providers.join(', ')}]';
       stdout.writeln(
-          '  [${i + 1}/${docs.length}] ${show.title}${added > 0 ? ' (+$added ep.)' : ''}$prov');
+        '  [${i + 1}/${docs.length}] ${show.title}${added > 0 ? ' (+$added ep.)' : ''}$prov',
+      );
       await Future.delayed(const Duration(milliseconds: 250));
     } catch (e) {
       errors++;
@@ -100,8 +111,11 @@ Future<void> _enrichShows(FirestoreRest db, String uid,
   stdout.writeln('Shows: $updated enriched, $errors failed.');
 }
 
-Future<void> _enrichMovies(FirestoreRest db, String uid,
-    {bool french = false}) async {
+Future<void> _enrichMovies(
+  FirestoreRest db,
+  String uid, {
+  bool french = false,
+}) async {
   final apiKey = Platform.environment['TMDB_API_KEY'];
   if (apiKey == null || apiKey.isEmpty) {
     stdout.writeln('TMDB_API_KEY not set: skipping movies.');
@@ -127,14 +141,16 @@ Future<void> _enrichMovies(FirestoreRest db, String uid,
       }
       await db.patch(
         'users/$uid/movies/$id',
-        movie.copyWith(
-          tmdbId: d.id,
-          poster: d.poster ?? movie.poster,
-          backdrop: d.backdrop,
-          overview: d.overview,
-          runtime: d.runtime,
-          metaRefreshedAt: DateTime.now(),
-        ).toJson(),
+        movie
+            .copyWith(
+              tmdbId: d.id,
+              poster: d.poster ?? movie.poster,
+              backdrop: d.backdrop,
+              overview: d.overview,
+              runtime: d.runtime,
+              metaRefreshedAt: DateTime.now(),
+            )
+            .toJson(),
       );
       updated++;
       if (updated % 25 == 0) {
@@ -146,5 +162,6 @@ Future<void> _enrichMovies(FirestoreRest db, String uid,
     }
   }
   stdout.writeln(
-      'Movies: $updated enriched, $skipped without a match, $errors failed.');
+    'Movies: $updated enriched, $skipped without a match, $errors failed.',
+  );
 }

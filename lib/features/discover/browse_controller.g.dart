@@ -227,7 +227,7 @@ final class CategoryGridProvider
   }
 }
 
-String _$categoryGridHash() => r'5f17adbb59dbc833928d4091ad326d6d54598236';
+String _$categoryGridHash() => r'31ae7221decb5789f8ac0b31f792e3ae52057d73';
 
 /// Paginated, sortable category grid backing the infinite-scrolling screen.
 

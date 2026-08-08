@@ -10,12 +10,15 @@ void main() {
     tvdbId: 1001,
     title: 'Show In Progress',
     seasons: [
-      const Season(number: 1, episodes: [
-        // Stale title on a watched episode: the merge must replace the title
-        // without touching watch state.
-        Episode(tvdbId: 90001, number: 1, name: 'Old Title', watched: true),
-        Episode(tvdbId: 90002, number: 2, watched: false),
-      ]),
+      const Season(
+        number: 1,
+        episodes: [
+          // Stale title on a watched episode: the merge must replace the title
+          // without touching watch state.
+          Episode(tvdbId: 90001, number: 1, name: 'Old Title', watched: true),
+          Episode(tvdbId: 90002, number: 2, watched: false),
+        ],
+      ),
     ],
   );
 
@@ -27,16 +30,25 @@ void main() {
     network: 'HBO',
     episodes: [
       TvdbEpisode(
-          season: 1, number: 1, name: 'Pilot', airDate: DateTime(2020, 1, 1)),
+        season: 1,
+        number: 1,
+        name: 'Pilot',
+        airDate: DateTime(2020, 1, 1),
+      ),
       TvdbEpisode(
-          season: 1,
-          number: 2,
-          name: 'Two',
-          airDate: DateTime(2020, 1, 8),
-          overview: 'Overview of episode two.',
-          still: 'https://artworks.thetvdb.com/banners/s2.jpg'),
+        season: 1,
+        number: 2,
+        name: 'Two',
+        airDate: DateTime(2020, 1, 8),
+        overview: 'Overview of episode two.',
+        still: 'https://artworks.thetvdb.com/banners/s2.jpg',
+      ),
       TvdbEpisode(
-          season: 2, number: 1, name: 'Return', airDate: DateTime(2026, 9, 1)),
+        season: 2,
+        number: 1,
+        name: 'Return',
+        airDate: DateTime(2026, 9, 1),
+      ),
       const TvdbEpisode(season: 0, number: 1, name: 'Bonus'),
     ],
   );

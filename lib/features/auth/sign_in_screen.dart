@@ -22,17 +22,23 @@ class SignInScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Wordmark: condensed caps with a tungsten underline.
-              Text('TV TRACK',
-                  style: condensed(
-                      size: 44, weight: FontWeight.w700, letterSpacing: 3)),
+              Text(
+                'TV TRACK',
+                style: condensed(
+                  size: 44,
+                  weight: FontWeight.w700,
+                  letterSpacing: 3,
+                ),
+              ),
               const SizedBox(height: 6),
               Container(width: 56, height: 4, color: tungsten),
               const SizedBox(height: 14),
-              Text(l10n.signInTagline,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: dust)),
+              Text(
+                l10n.signInTagline,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: dust),
+              ),
               const SizedBox(height: 48),
               if (auth.isLoading)
                 const CircularProgressIndicator()
@@ -49,8 +55,9 @@ class SignInScreen extends ConsumerWidget {
                 Text(
                   '${l10n.signInFailed}\n($auth)',
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 12),
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ],

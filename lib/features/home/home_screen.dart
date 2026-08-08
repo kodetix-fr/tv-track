@@ -27,8 +27,7 @@ class HomeScreen extends HookConsumerWidget {
 
     // Fire-and-forget refresh of stale metadata when the app opens.
     useEffect(() {
-      Future.microtask(
-          () => ref.read(metadataRefreshProvider.notifier).run());
+      Future.microtask(() => ref.read(metadataRefreshProvider.notifier).run());
       return null;
     }, const []);
 
@@ -59,27 +58,28 @@ class HomeScreen extends HookConsumerWidget {
       ),
       body: IndexedStack(
         index: tab.value,
-        children: const [
-          UpcomingTab(),
-          ShowsTab(),
-          MoviesTab(),
-          DiscoverTab(),
-        ],
+        children: const [UpcomingTab(), ShowsTab(), MoviesTab(), DiscoverTab()],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: tab.value,
         onDestinationSelected: (i) => tab.value = i,
         destinations: [
           NavigationDestination(
-              icon: const Icon(Icons.calendar_month_outlined),
-              label: l10n.tabUpcoming),
+            icon: const Icon(Icons.calendar_month_outlined),
+            label: l10n.tabUpcoming,
+          ),
           NavigationDestination(
-              icon: const Icon(Icons.tv), label: l10n.tabShows),
+            icon: const Icon(Icons.tv),
+            label: l10n.tabShows,
+          ),
           NavigationDestination(
-              icon: const Icon(Icons.movie), label: l10n.tabMovies),
+            icon: const Icon(Icons.movie),
+            label: l10n.tabMovies,
+          ),
           NavigationDestination(
-              icon: const Icon(Icons.explore_outlined),
-              label: l10n.tabDiscover),
+            icon: const Icon(Icons.explore_outlined),
+            label: l10n.tabDiscover,
+          ),
         ],
       ),
     );

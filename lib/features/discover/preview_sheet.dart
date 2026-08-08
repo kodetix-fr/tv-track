@@ -54,7 +54,9 @@ class _PreviewSheet extends ConsumerWidget {
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: CachedNetworkImage(
-                    imageUrl: backdrop, fit: BoxFit.cover),
+                  imageUrl: backdrop,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           Padding(
@@ -62,16 +64,23 @@ class _PreviewSheet extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, style: condensed(size: 24, weight: FontWeight.w700)),
+                Text(
+                  item.title,
+                  style: condensed(size: 24, weight: FontWeight.w700),
+                ),
                 const SizedBox(height: 6),
                 Text(meta, style: mono(size: 11, color: tungsten)),
                 const SizedBox(height: 20),
                 if (item.overview != null) ...[
                   SectionLabel(l10n.synopsis),
                   const SizedBox(height: 8),
-                  Text(item.overview!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: linen.withValues(alpha: .85), height: 1.5)),
+                  Text(
+                    item.overview!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: linen.withValues(alpha: .85),
+                      height: 1.5,
+                    ),
+                  ),
                   const SizedBox(height: 24),
                 ],
                 SizedBox(
@@ -80,8 +89,10 @@ class _PreviewSheet extends ConsumerWidget {
                       ? OutlinedButton.icon(
                           onPressed: null,
                           icon: const Icon(Icons.check, color: tungsten),
-                          label: Text(l10n.alreadyInList,
-                              style: condensed(size: 15, color: dust)),
+                          label: Text(
+                            l10n.alreadyInList,
+                            style: condensed(size: 15, color: dust),
+                          ),
                         )
                       : FilledButton.icon(
                           style: FilledButton.styleFrom(
@@ -90,11 +101,14 @@ class _PreviewSheet extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
                           icon: const Icon(Icons.add),
-                          label: Text(l10n.addToList,
-                              style: condensed(
-                                  size: 15,
-                                  color: const Color(0xFF221603),
-                                  weight: FontWeight.w600)),
+                          label: Text(
+                            l10n.addToList,
+                            style: condensed(
+                              size: 15,
+                              color: const Color(0xFF221603),
+                              weight: FontWeight.w600,
+                            ),
+                          ),
                           onPressed: () => _add(context, ref),
                         ),
                 ),
@@ -114,11 +128,13 @@ class _PreviewSheet extends ConsumerWidget {
     final ok = await ref.read(libraryAddProvider.notifier).add(item);
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(ok
-            ? l10n.addedToList(item.title)
-            : l10n.addFailed(item.title)),
-        duration: const Duration(seconds: 3),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            ok ? l10n.addedToList(item.title) : l10n.addFailed(item.title),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
   }
 }

@@ -86,15 +86,21 @@ void main() {
       tvdbId: 42,
       title: 'Multi',
       seasons: [
-        const Season(number: 1, episodes: [
-          Episode(tvdbId: 1, number: 1, watched: true),
-          Episode(tvdbId: 2, number: 2, watched: false),
-        ]),
-        const Season(number: 2, episodes: [
-          Episode(tvdbId: 3, number: 1, watched: true),
-          Episode(tvdbId: 4, number: 2, watched: false),
-          Episode(tvdbId: 5, number: 3, watched: false),
-        ]),
+        const Season(
+          number: 1,
+          episodes: [
+            Episode(tvdbId: 1, number: 1, watched: true),
+            Episode(tvdbId: 2, number: 2, watched: false),
+          ],
+        ),
+        const Season(
+          number: 2,
+          episodes: [
+            Episode(tvdbId: 3, number: 1, watched: true),
+            Episode(tvdbId: 4, number: 2, watched: false),
+            Episode(tvdbId: 5, number: 3, watched: false),
+          ],
+        ),
       ],
     );
 
@@ -126,15 +132,18 @@ void main() {
     final realMovies = File('assets/tvtime/movies.json');
     final available = realSeries.existsSync() && realMovies.existsSync();
 
-    test('parses cleanly and survives a Firestore round-trip',
-        skip: available ? null : 'no export in assets/tvtime/', () {
-      final shows = TvTimeParser.parseShows(realSeries.readAsStringSync());
-      final movies = TvTimeParser.parseMovies(realMovies.readAsStringSync());
-      expect(shows, isNotEmpty);
-      expect(movies, isNotEmpty);
-      for (final show in shows) {
-        expect(Show.fromJson(show.toJson()), equals(show));
-      }
-    });
+    test(
+      'parses cleanly and survives a Firestore round-trip',
+      skip: available ? null : 'no export in assets/tvtime/',
+      () {
+        final shows = TvTimeParser.parseShows(realSeries.readAsStringSync());
+        final movies = TvTimeParser.parseMovies(realMovies.readAsStringSync());
+        expect(shows, isNotEmpty);
+        expect(movies, isNotEmpty);
+        for (final show in shows) {
+          expect(Show.fromJson(show.toJson()), equals(show));
+        }
+      },
+    );
   });
 }

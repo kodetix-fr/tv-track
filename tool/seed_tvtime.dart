@@ -24,8 +24,10 @@ Future<void> main(List<String> args) async {
   final uid = opts['uid'];
   final project = opts['project'];
   if (uid == null || project == null) {
-    stderr.writeln('Usage: dart run tool/seed_tvtime.dart '
-        '--uid <UID> --project <PROJECT_ID> [--series f.json] [--movies f.json]');
+    stderr.writeln(
+      'Usage: dart run tool/seed_tvtime.dart '
+      '--uid <UID> --project <PROJECT_ID> [--series f.json] [--movies f.json]',
+    );
     exit(1);
   }
 
@@ -38,8 +40,10 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
   final parsed = TvTimeParser.parseFiles(contents);
-  stdout.writeln('${parsed.shows.length} shows, ${parsed.movies.length} movies '
-      'to write into users/$uid (project $project)');
+  stdout.writeln(
+    '${parsed.shows.length} shows, ${parsed.movies.length} movies '
+    'to write into users/$uid (project $project)',
+  );
 
   final db = FirestoreRest(project: project, token: await gcloudToken());
   var done = 0;

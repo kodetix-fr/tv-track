@@ -3,28 +3,33 @@ import 'package:tv_track/data/models/show.dart';
 
 void main() {
   Show show(String? overview) => Show(
-        tvdbId: 1,
-        title: 'X',
-        tmdbId: 42,
-        overview: overview,
-        poster: 'https://img/poster.jpg',
-        seasons: [
-          Season(number: 1, episodes: [
-            Episode(
-              tvdbId: 10,
-              number: 1,
-              name: 'Pilot',
-              airDate: DateTime(2020, 1, 1),
-              still: 'https://img/still.jpg',
-              overview: 'An enriched episode.',
-            ),
-          ]),
+    tvdbId: 1,
+    title: 'X',
+    tmdbId: 42,
+    overview: overview,
+    poster: 'https://img/poster.jpg',
+    seasons: [
+      Season(
+        number: 1,
+        episodes: [
+          Episode(
+            tvdbId: 10,
+            number: 1,
+            name: 'Pilot',
+            airDate: DateTime(2020, 1, 1),
+            still: 'https://img/still.jpg',
+            overview: 'An enriched episode.',
+          ),
         ],
-      );
+      ),
+    ],
+  );
 
-  const english = 'A family moves to a small town and they discover a secret '
+  const english =
+      'A family moves to a small town and they discover a secret '
       'that was buried for years.';
-  const french = 'Une famille déménage dans une petite ville et découvre un '
+  const french =
+      'Une famille déménage dans une petite ville et découvre un '
       'secret enfoui depuis des années.';
 
   group('looksEnglish', () {
@@ -61,12 +66,14 @@ void main() {
       expect(show('Le Kid.').needsRepair(wantEnglish: true), isFalse);
     });
 
-    test('still flags a record with content missing, whatever the language',
-        () {
-      expect(
-        show(english).copyWith(poster: null).needsRepair(wantEnglish: true),
-        isTrue,
-      );
-    });
+    test(
+      'still flags a record with content missing, whatever the language',
+      () {
+        expect(
+          show(english).copyWith(poster: null).needsRepair(wantEnglish: true),
+          isTrue,
+        );
+      },
+    );
   });
 }

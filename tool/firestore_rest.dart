@@ -9,7 +9,7 @@ const base = 'https://firestore.googleapis.com/v1';
 
 class FirestoreRest {
   FirestoreRest({required this.project, required this.token})
-      : _client = HttpClient();
+    : _client = HttpClient();
 
   final String project;
   final String token;
@@ -17,8 +17,10 @@ class FirestoreRest {
 
   String get _root => 'projects/$project/databases/(default)/documents';
 
-  Future<Map<String, dynamic>> _json(HttpClientRequest request,
-      [Object? body]) async {
+  Future<Map<String, dynamic>> _json(
+    HttpClientRequest request, [
+    Object? body,
+  ]) async {
     request.headers
       ..set('Authorization', 'Bearer $token')
       ..contentType = ContentType.json;
@@ -62,22 +64,25 @@ class FirestoreRest {
 
 /// JSON Dart → format "typed value" de l'API REST Firestore.
 Map<String, dynamic> encodeValue(Object? v) => switch (v) {
-      null => {'nullValue': null},
-      bool b => {'booleanValue': b},
-      int i => {'integerValue': '$i'},
-      double d => {'doubleValue': d},
-      String s => {'stringValue': s},
-      List l => {
-          'arrayValue': {'values': [for (final e in l) encodeValue(e)]}
-        },
-      Map m => {
-          'mapValue': {'fields': encodeFields(m.cast<String, dynamic>())}
-        },
-      _ => throw ArgumentError('type non géré: ${v.runtimeType}'),
-    };
+  null => {'nullValue': null},
+  bool b => {'booleanValue': b},
+  int i => {'integerValue': '$i'},
+  double d => {'doubleValue': d},
+  String s => {'stringValue': s},
+  List l => {
+    'arrayValue': {
+      'values': [for (final e in l) encodeValue(e)],
+    },
+  },
+  Map m => {
+    'mapValue': {'fields': encodeFields(m.cast<String, dynamic>())},
+  },
+  _ => throw ArgumentError('type non géré: ${v.runtimeType}'),
+};
 
-Map<String, dynamic> encodeFields(Map<String, dynamic> json) =>
-    {for (final e in json.entries) e.key: encodeValue(e.value)};
+Map<String, dynamic> encodeFields(Map<String, dynamic> json) => {
+  for (final e in json.entries) e.key: encodeValue(e.value),
+};
 
 /// Format "typed value" → JSON Dart.
 Object? decodeValue(Map<String, dynamic> v) {
@@ -95,13 +100,15 @@ Object? decodeValue(Map<String, dynamic> v) {
   }
   if (v.containsKey('mapValue')) {
     return decodeFields(
-        ((v['mapValue'] as Map)['fields'] as Map? ?? {}).cast());
+      ((v['mapValue'] as Map)['fields'] as Map? ?? {}).cast(),
+    );
   }
   throw ArgumentError('valeur non gérée: ${v.keys}');
 }
 
-Map<String, dynamic> decodeFields(Map<String, dynamic> fields) =>
-    {for (final e in fields.entries) e.key: decodeValue((e.value as Map).cast())};
+Map<String, dynamic> decodeFields(Map<String, dynamic> fields) => {
+  for (final e in fields.entries) e.key: decodeValue((e.value as Map).cast()),
+};
 
 Future<String> gcloudToken() async {
   final r = await Process.run('gcloud', ['auth', 'print-access-token']);

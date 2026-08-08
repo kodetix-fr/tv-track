@@ -82,18 +82,23 @@ class LiveRepair extends _$LiveRepair {
       // language.
       final wantEnglish =
           ref.read(localeControllerProvider) == AppLocale.english;
-      final keepOverview = (movie.overview?.isNotEmpty ?? false) &&
+      final keepOverview =
+          (movie.overview?.isNotEmpty ?? false) &&
           looksEnglish(movie.overview) != !wantEnglish;
-      await repo.saveMovie(movie.copyWith(
-        tmdbId: movie.tmdbId ?? d.id,
-        poster: movie.poster ?? d.poster,
-        backdrop: movie.backdrop ?? d.backdrop,
-        overview: keepOverview ? movie.overview : (d.overview ?? movie.overview),
-        runtime: (movie.runtime != null && movie.runtime! > 0)
-            ? movie.runtime
-            : d.runtime,
-        metaRefreshedAt: DateTime.now(),
-      ));
+      await repo.saveMovie(
+        movie.copyWith(
+          tmdbId: movie.tmdbId ?? d.id,
+          poster: movie.poster ?? d.poster,
+          backdrop: movie.backdrop ?? d.backdrop,
+          overview: keepOverview
+              ? movie.overview
+              : (d.overview ?? movie.overview),
+          runtime: (movie.runtime != null && movie.runtime! > 0)
+              ? movie.runtime
+              : d.runtime,
+          metaRefreshedAt: DateTime.now(),
+        ),
+      );
     } catch (_) {
       // Retried next session.
     } finally {

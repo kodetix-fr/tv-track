@@ -15,8 +15,10 @@ class SectionLabel extends StatelessWidget {
       children: [
         Container(width: 14, height: 2, color: tungsten),
         const SizedBox(width: 8),
-        Text(text.toUpperCase(),
-            style: mono(size: 11, color: dust, letterSpacing: 1.6)),
+        Text(
+          text.toUpperCase(),
+          style: mono(size: 11, color: dust, letterSpacing: 1.6),
+        ),
       ],
     );
   }

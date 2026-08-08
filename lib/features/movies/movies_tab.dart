@@ -30,15 +30,16 @@ class MoviesTab extends HookConsumerWidget {
         }
 
         final toWatch = all.where((m) => !m.watched).length;
-        final filtered =
-            all.where((m) => m.watched == showWatched.value).sorted((a, b) {
-          if (showWatched.value) {
-            final da = a.watchedAt ?? DateTime(1970);
-            final db = b.watchedAt ?? DateTime(1970);
-            return db.compareTo(da);
-          }
-          return a.title.toLowerCase().compareTo(b.title.toLowerCase());
-        });
+        final filtered = all
+            .where((m) => m.watched == showWatched.value)
+            .sorted((a, b) {
+              if (showWatched.value) {
+                final da = a.watchedAt ?? DateTime(1970);
+                final db = b.watchedAt ?? DateTime(1970);
+                return db.compareTo(da);
+              }
+              return a.title.toLowerCase().compareTo(b.title.toLowerCase());
+            });
 
         return Column(
           children: [
@@ -94,43 +95,46 @@ class _MovieTile extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
           child: Row(
-          children: [
-          Poster(
-              title: movie.title,
-              seed: movie.tvdbId,
-              url: movie.poster,
-              width: 52),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  movie.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: condensed(size: 15.5),
+            children: [
+              Poster(
+                title: movie.title,
+                seed: movie.tvdbId,
+                url: movie.poster,
+                width: 52,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      movie.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: condensed(size: 15.5),
+                    ),
+                    if (movie.year != null) ...[
+                      const SizedBox(height: 3),
+                      Text('${movie.year}', style: mono(size: 10.5)),
+                    ],
+                  ],
                 ),
-                if (movie.year != null) ...[
-                  const SizedBox(height: 3),
-                  Text('${movie.year}', style: mono(size: 10.5)),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(width: 6),
-          IconButton(
-            icon: Icon(
-              movie.watched ? Icons.check_circle : Icons.check_circle_outline,
-              size: 30,
-              color: movie.watched ? tungsten : dust,
-            ),
-            tooltip: movie.watched
-                ? AppLocalizations.of(context).markUnwatched
-                : AppLocalizations.of(context).markWatched,
-            onPressed: () => _toggle(context, ref),
-          ),
-        ],
+              ),
+              const SizedBox(width: 6),
+              IconButton(
+                icon: Icon(
+                  movie.watched
+                      ? Icons.check_circle
+                      : Icons.check_circle_outline,
+                  size: 30,
+                  color: movie.watched ? tungsten : dust,
+                ),
+                tooltip: movie.watched
+                    ? AppLocalizations.of(context).markUnwatched
+                    : AppLocalizations.of(context).markWatched,
+                onPressed: () => _toggle(context, ref),
+              ),
+            ],
           ),
         ),
       ),
@@ -145,14 +149,16 @@ class _MovieTile extends ConsumerWidget {
 
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).movieRemoved(movie.title)),
-        duration: const Duration(seconds: 4),
-        action: SnackBarAction(
-          label: AppLocalizations.of(context).undo,
-          onPressed: () => repo.saveMovie(movie),
+      ..showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).movieRemoved(movie.title)),
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).undo,
+            onPressed: () => repo.saveMovie(movie),
+          ),
         ),
-      ));
+      );
   }
 
   void _toggle(BuildContext context, WidgetRef ref) {
@@ -161,22 +167,28 @@ class _MovieTile extends ConsumerWidget {
     final watched = !movie.watched;
 
     HapticFeedback.lightImpact();
-    repo.saveMovie(movie.copyWith(
-      watched: watched,
-      watchedAt: watched ? DateTime.now() : null,
-    ));
+    repo.saveMovie(
+      movie.copyWith(
+        watched: watched,
+        watchedAt: watched ? DateTime.now() : null,
+      ),
+    );
 
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(watched
-            ? AppLocalizations.of(context).movieMarkedWatched(movie.title)
-            : AppLocalizations.of(context).movieMarkedToWatch(movie.title)),
-        duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          label: AppLocalizations.of(context).undo,
-          onPressed: () => repo.saveMovie(movie),
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            watched
+                ? AppLocalizations.of(context).movieMarkedWatched(movie.title)
+                : AppLocalizations.of(context).movieMarkedToWatch(movie.title),
+          ),
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).undo,
+            onPressed: () => repo.saveMovie(movie),
+          ),
         ),
-      ));
+      );
   }
 }

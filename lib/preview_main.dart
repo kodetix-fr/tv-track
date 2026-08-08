@@ -28,34 +28,38 @@ Future<void> main() async {
   await initializeDateFormatting();
   final prefs = await SharedPreferences.getInstance();
 
-  runApp(ProviderScope(
-    overrides: [
-      sharedPreferencesProvider.overrideWithValue(prefs),
-      authStateProvider.overrideWith((ref) => Stream<User?>.value(null)),
-      trackingRepositoryProvider.overrideWithValue(null),
-      showsProvider.overrideWith((ref) => Stream.value(_sampleShows)),
-      moviesProvider.overrideWith((ref) => Stream.value(_sampleMovies)),
-      discoverSeenKeysProvider.overrideWith((ref) => Stream.value(<String>{})),
-    ],
-    child: MaterialApp(
-      title: 'TV Track — preview',
-      debugShowCheckedModeBanner: false,
-      theme: buildTheme(),
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        authStateProvider.overrideWith((ref) => Stream<User?>.value(null)),
+        trackingRepositoryProvider.overrideWithValue(null),
+        showsProvider.overrideWith((ref) => Stream.value(_sampleShows)),
+        moviesProvider.overrideWith((ref) => Stream.value(_sampleMovies)),
+        discoverSeenKeysProvider.overrideWith(
+          (ref) => Stream.value(<String>{}),
+        ),
       ],
-      home: switch (_screen) {
-        'detail' => const ShowDetailScreen(tvdbId: 94997),
-        'movie' => const MovieDetailScreen(tvdbId: 1),
-        'search' => const SearchScreen(),
-        _ => const HomeScreen(),
-      },
+      child: MaterialApp(
+        title: 'TV Track — preview',
+        debugShowCheckedModeBanner: false,
+        theme: buildTheme(),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: switch (_screen) {
+          'detail' => const ShowDetailScreen(tvdbId: 94997),
+          'movie' => const MovieDetailScreen(tvdbId: 1),
+          'search' => const SearchScreen(),
+          _ => const HomeScreen(),
+        },
+      ),
     ),
-  ));
+  );
 }
 
 // Real episode stills, so the episode rows render as they would in production.
@@ -70,27 +74,31 @@ const _stills = [
   'https://static.tvmaze.com/uploads/images/medium_landscape/530/1325316.jpg',
 ];
 
-Season _season(int n, int count, int watched,
-        {int? futureEpAt, bool stills = false}) =>
-    Season(
-      number: n,
-      episodes: [
-        for (var i = 1; i <= count; i++)
-          Episode(
-            tvdbId: n * 1000 + i,
-            number: i,
-            name: 'Episode $i',
-            watched: i <= watched,
-            watchedAt: i <= watched ? DateTime(2026, 6, i.clamp(1, 28)) : null,
-            overview: i <= watched + 1
-                ? 'Tensions rise another notch, and an unexpected alliance '
-                    'reshuffles the board before the final confrontation.'
-                : null,
-            still: stills && i <= _stills.length ? _stills[i - 1] : null,
-            airDate: futureEpAt == i ? DateTime(2026, 7, 10 + n, 21, 0) : null,
-          ),
-      ],
-    );
+Season _season(
+  int n,
+  int count,
+  int watched, {
+  int? futureEpAt,
+  bool stills = false,
+}) => Season(
+  number: n,
+  episodes: [
+    for (var i = 1; i <= count; i++)
+      Episode(
+        tvdbId: n * 1000 + i,
+        number: i,
+        name: 'Episode $i',
+        watched: i <= watched,
+        watchedAt: i <= watched ? DateTime(2026, 6, i.clamp(1, 28)) : null,
+        overview: i <= watched + 1
+            ? 'Tensions rise another notch, and an unexpected alliance '
+                  'reshuffles the board before the final confrontation.'
+            : null,
+        still: stills && i <= _stills.length ? _stills[i - 1] : null,
+        airDate: futureEpAt == i ? DateTime(2026, 7, 10 + n, 21, 0) : null,
+      ),
+  ],
+);
 
 final _sampleShows = <Show>[
   Show(
@@ -120,10 +128,7 @@ final _sampleShows = <Show>[
     airStatus: 'Running',
     network: 'MGM+',
     providers: const ['Paramount+'],
-    seasons: [
-      _season(1, 10, 10),
-      _season(2, 10, 6, futureEpAt: 7),
-    ],
+    seasons: [_season(1, 10, 10), _season(2, 10, 6, futureEpAt: 7)],
   ),
   Show(
     tvdbId: 1399,
